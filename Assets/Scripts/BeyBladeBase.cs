@@ -8,11 +8,11 @@ public class BeyBladeBase : MonoBehaviour
     public string PlayerTag => _playerTag;
     public string WallTag => _wallTag;
     /// <summary>移動スピードのプロパティ</summary>
-    public float Speed { get => _speed; set => _speed = value; }
-    /// <summary>回転スピードのプロパティ</summary>
-    public float RotSpeed{ get =>_rotSpeed; set => _rotSpeed = value; }   
+    public float Speed { get => _speed; set =>   _speed = value; }
     /// <summary>半径のプロパティ</summary>
     public float Radius { get => _radius; set => _radius = value; }
+    /// <summary>回転スピードのプロパティ</summary>
+    public float RotSpeed{ get =>_rotSpeed; set => _rotSpeed = value; }   
     /// <summary>切り替え用のプロパティ</summary>
     public bool Switch { get => _switch; set => _switch = value; }
 
@@ -26,6 +26,11 @@ public class BeyBladeBase : MonoBehaviour
     [Header("移動スピード")]
     float _speed = 2f;
     
+    /// <summary>半径</summary>
+    [SerializeField]
+    [Header("半径")]
+    float _radius = 30;
+
     /// <summary>回転スピード</summary>
     [SerializeField]
     [Header("回転スピード")]
@@ -34,11 +39,6 @@ public class BeyBladeBase : MonoBehaviour
     [SerializeField]
     [Header("回転値の減少値")]
     float _rotSpeedDown = 0.00001f;
-
-    /// <summary>半径</summary>
-    [SerializeField]
-    [Header("半径")]
-    float _radius = 30;
 
     /// <summary>PlayerのTag</summary>
     [SerializeField]
@@ -51,6 +51,7 @@ public class BeyBladeBase : MonoBehaviour
     string _wallTag = "Wall";
 
     Rigidbody _rb;
+    float _maxRotSpeed;
     float _timer;
     /// <summary>切り替え用</summary>
     bool _switch;
@@ -64,6 +65,7 @@ public class BeyBladeBase : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         //回転値のXとZを固定
         _rb.constraints = freezeRotX | freezeRotZ;
+        _maxRotSpeed = _rotSpeed;
     }
 
     protected virtual void FixedUpdate()
@@ -71,15 +73,20 @@ public class BeyBladeBase : MonoBehaviour
         _timer += Time.deltaTime;
         //回転
         _rb.angularVelocity = new Vector3(_rb.angularVelocity.x, _rotSpeed, _rb.angularVelocity.z);
-        //回転スピードを下げる
-        if (_rotSpeed > 0) _rotSpeed -= _rotSpeedDown;
-        else _rotSpeed = 0;
-        //////移動速度を下げる
-        //if (_speed > 0) _speed -= _rotSpeedDown / _rotSpeed;
+        ////回転スピードを下げる
+        //if (_rotSpeed > 0) _rotSpeed -= _rotSpeedDown;
+        //else _rotSpeed = 0;
+        ////移動速度を下げる
+        //if (_speed > 0) _speed -= _rotSpeedDown;
         //else _speed = 0;
-        if (_rotSpeed <= 1f) _rb.constraints = RigidbodyConstraints.None;
-        if (_rotSpeed >= RotSpeed) _radius -= _rotSpeedDown;
-        else _radius = 0;
+        ////半径を下げる
+        //if (_radius > 0) _radius -= _rotSpeedDown;
+        //else _radius = 0;
+
+        //移動スピードと半径、１対５
+
+        //回転スピードがほぼなくなったら体勢を崩す
+        if (_rotSpeed <= 10f) _rb.constraints = RigidbodyConstraints.None;
     }
 
     protected virtual void OnCollisionEnter(Collision collision)
