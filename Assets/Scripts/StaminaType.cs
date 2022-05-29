@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackType : BeyBladeBase
+public class StaminaType : BeyBladeBase
 {
     protected override void Awake()
     {
@@ -11,11 +11,6 @@ public class AttackType : BeyBladeBase
 
     protected override void FixedUpdate()
     {
-        if (RotSpeed >= 1)
-        {
-            Rb.velocity = new Vector3(-Radius * Mathf.Sin(Time.time * RotSpeed), 0f, Radius * Mathf.Cos(Time.time * RotSpeed)) + (Target.transform.position - transform.position).normalized;
-        }
-        else Rb.velocity = Vector3.zero;
         base.FixedUpdate();
     }
 
