@@ -6,7 +6,7 @@ using UnityEngine;
 /// 対戦ゲームなので勝敗の処理はここで行う
 /// 貰える金額も決められる
 /// </summary>
-public class GameManager : MonoBehaviour
+public class GameManager : SingletonMonoBehaviour<GameManager>
 {
     /// <summary>何ポイント先取で勝ちか</summary>
     [SerializeField]
@@ -57,28 +57,36 @@ public class GameManager : MonoBehaviour
     [Header("相手を破壊する度に貰える金額のボーナス(実装未定)")]
     float _burstFinishBonus;
 
+    /// <summary>Player1のTag</summary>
+    [SerializeField]
+    [Header("Player1のTag")]
+    string _firstPlayerTag = "Player";
+
+    /// <summary>Player2のTag</summary>
+    [SerializeField]
+    [Header("Player2のTag")]
+    string _secondPlayerTag = "Player2";
+
     /// <summary>Player1のゲームオブジェクト</summary>
     GameObject _firstPlayer;
     /// <summary>Player2のゲームオブジェクト</summary>
     GameObject _secondPlayer;
-
     /// <summary>Player1が持っている勝利ポイント</summary>
     int _firstPlayerPoint;
     /// <summary>Player2が持っている勝利ポイント</summary>
     int _secondPlayerPoint;
 
-
-
-
-
-    void Start()
+    protected override void Awake()
     {
-        
+        base.Awake();
+        _firstPlayer = GameObject.FindWithTag(_firstPlayerTag);
+        _secondPlayer = GameObject.FindWithTag(_secondPlayerTag);
     }
 
-    // Update is called once per frame
+
     void Update()
     {
-        
+
     }
+
 }
