@@ -20,7 +20,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     [Range(0,100)]
     int _spinFinishPoints = 1;
 
-    /// <summary>相手を場外に追い出したときに貰えるポイント</summary>
+    /// <summary>相手を場外に追い出した時に貰えるポイント</summary>
     [SerializeField]
     [Header("相手を場外に追い出した時に貰えるポイント")]
     [Range(0, 100)]
@@ -66,6 +66,13 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     [SerializeField]
     [Header("Player2のTag")]
     string _secondPlayerTag = "Player2";
+
+    /// <summary>PlaneのCollider</summary>
+    [SerializeField]
+    [Header("PlaneのCollider")]
+    Collider _collider;
+
+    Rigidbody _rb;
 
     /// <summary>Player1のゲームオブジェクト</summary>
     GameObject _firstPlayer;
