@@ -9,9 +9,9 @@ public class StaminaType : BeyBladeBase
         base.Awake();
     }
 
-    protected override void FixedUpdate()
+    protected override void Update()
     {
-        base.FixedUpdate();
+        base.Update();
     }
 
     protected override void OnCollisionEnter(Collision collision)

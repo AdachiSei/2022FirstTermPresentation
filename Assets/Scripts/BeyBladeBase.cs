@@ -1,35 +1,34 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BeyBladeBase : MonoBehaviour
 {
     public Rigidbody Rb => _rb;
-    /// <summary>ターゲットとなるオブジェクトのプロパティ</summary>
+    /// <summary>ターゲットとなるスタジアムの中心を示す空のオブジェクトのプロパティ</summary>
     public GameObject Target => _target;
-    public string PlayerTag => _playerTag;
+    /// <summary>敵PlayerのTagのプロパティ</summary>
+    public string EnemyPlayerTag => _enemyPlayerTag;
+    /// <summary>WallのTagのプロパティ</summary>
     public string WallTag => _wallTag;
+    /// <summary>FloorのTagのプロパティ</summary>
+    public string FloorTag => _floorTag;
     /// <summary>移動スピードのプロパティ</summary>
-    public float Speed { get => _speed; set =>   _speed = value; }
-    /// <summary>半径のプロパティ</summary>
-    public float Radius { get => _radius; set => _radius = value; }
+    public float Speed { get => _speed; set =>  _speed = value; }
     /// <summary>回転スピードのプロパティ</summary>
     public float RotSpeed{ get =>_rotSpeed; set => _rotSpeed = value; }   
     /// <summary>切り替え用のプロパティ</summary>
     public bool Switch { get => _switch; set => _switch = value; }
 
-    /// <summary>ターゲットとなるゲームオブジェクト</summary>
+    /// <summary>ターゲットとなるスタジアムの中心を示す空のオブジェクトのTag</summary>
     [SerializeField]
-    [Header("ターゲット")]
-    GameObject _target;
+    [Header("ターゲットとなるスタジアムの中心のオブジェクトのTag")]
+    string _targetTag;
 
     /// <summary>移動スピード</summary>
     [SerializeField]
     [Header("移動スピード")]
     float _speed = 2f;
-    
-    /// <summary>半径</summary>
-    [SerializeField]
-    [Header("半径")]
-    float _radius = 30;
 
     /// <summary>回転スピード</summary>
     [SerializeField]
@@ -40,65 +39,69 @@ public class BeyBladeBase : MonoBehaviour
     [Header("回転値の減少値")]
     float _rotSpeedDown = 0.00001f;
 
-    /// <summary>PlayerのTag</summary>
+    /// <summary>敵PlayerのTag</summary>
     [SerializeField]
-    [Header("PlayerのTag")]
-    string _playerTag = "Player";
+    [Header("敵PlayerのTag")]
+    string _enemyPlayerTag = "Player";
 
     /// <summary>WallのTag</summary>
     [SerializeField]
     [Header("WallのTag")]
     string _wallTag = "Wall";
 
+    /// <summary>FloorのTag</summary>
+    [SerializeField]
+    [Header("FloorのTag")]
+    string _floorTag = "Floor";
+
     Rigidbody _rb;
-    float _maxRotSpeed;
-    float _timer;
+    /// <summary>ターゲットとなるオブジェクト</summary>
+    GameObject _target;
     /// <summary>切り替え用</summary>
     bool _switch;
-
-    //回転値を固定する用
+    /// <summary>回転値Xを固定するためのメンバー変数</summary>
     RigidbodyConstraints freezeRotX = RigidbodyConstraints.FreezeRotationX;
+    /// <summary>回転値Zを固定するためのメンバー変数</summary>
     RigidbodyConstraints freezeRotZ = RigidbodyConstraints.FreezeRotationZ;
 
     protected virtual void Awake()
     {
         _rb = GetComponent<Rigidbody>();
+        _target = GameObject.FindWithTag(_targetTag);
         //回転値のXとZを固定
         _rb.constraints = freezeRotX | freezeRotZ;
-        _maxRotSpeed = _rotSpeed;
     }
 
-    protected virtual void FixedUpdate()
+    protected virtual void Update()
     {
-        _timer += Time.deltaTime;
         //回転
         _rb.angularVelocity = new Vector3(_rb.angularVelocity.x, _rotSpeed, _rb.angularVelocity.z);
-        ////回転スピードを下げる
-        //if (_rotSpeed > 0) _rotSpeed -= _rotSpeedDown;
-        //else _rotSpeed = 0;
-        ////移動速度を下げる
-        //if (_speed > 0) _speed -= _rotSpeedDown;
-        //else _speed = 0;
-        ////半径を下げる
-        //if (_radius > 0) _radius -= _rotSpeedDown;
-        //else _radius = 0;
-
-        //移動スピードと半径、１対５
-
+        //回転スピードを下げる
+        if (_rotSpeed > 0) _rotSpeed -= _rotSpeedDown;
+        //回転スピードが0になったら止まる
+        else
+        {
+            _rotSpeed = 0;
+            //GameManagerに伝える処理を書く
+        }
         //回転スピードがほぼなくなったら体勢を崩す
         if (_rotSpeed <= 10f) _rb.constraints = RigidbodyConstraints.None;
     }
 
     protected virtual void OnCollisionEnter(Collision collision)
     {
-        //敵に触れたら
-        if(collision.gameObject.tag == PlayerTag)
+        //敵に当たったら
+        if (collision.gameObject.tag == _enemyPlayerTag)
         {
             //自分の体制が崩れる
             _rb.constraints = freezeRotX & freezeRotZ;
-            _timer = 0;
             _switch = true;
-        }      
+        }
+        //場外の床に当たったら
+        else if(collision.gameObject.tag == _floorTag)
+        {
+            //GameManagerに伝える処理を書く
+        }
     }
 
     protected virtual void OnCollisionExit(Collision collision)
