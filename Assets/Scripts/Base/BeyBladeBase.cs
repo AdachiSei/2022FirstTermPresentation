@@ -15,17 +15,19 @@ public class BeyBladeBase : MonoBehaviour
     public string WallTag => _wallTag;
     /// <summary>FloorのTagのプロパティ</summary>
     public string FloorTag => _floorTag;
+    /// <summary>体力のプロパティ</summary>
+    public int HP => _hp;
     /// <summary>移動スピードのプロパティ</summary>
-    public float Speed { get => _speed; set =>  _speed = value; }
+    public float Speed { get => _speed; set => _speed = value; }
     /// <summary>回転スピードのプロパティ</summary>
-    public float RotSpeed{ get =>_rotSpeed; set => _rotSpeed = value; }   
+    public float RotSpeed { get => _rotSpeed; set => _rotSpeed = value; }
     /// <summary>切り替え用のプロパティ</summary>
     public bool Switch { get => _switch; set => _switch = value; }
 
-    /// <summary>ターゲットとなるスタジアムの中心を示す空のオブジェクトのTag</summary>
+    /// <summary>体力</summary>
     [SerializeField]
-    [Header("ターゲットとなるスタジアムの中心のオブジェクトのTag")]
-    string _targetTag;
+    [Header("体力")]
+    int _hp;
 
     /// <summary>移動スピード</summary>
     [SerializeField]
@@ -40,6 +42,11 @@ public class BeyBladeBase : MonoBehaviour
     [SerializeField]
     [Header("回転値の減少値")]
     float _rotSpeedDown = 0.00001f;
+
+    /// <summary>ターゲットとなるスタジアムの中心を示す空のオブジェクトのTag</summary>
+    [SerializeField]
+    [Header("ターゲットとなるスタジアムの中心のオブジェクトのTag")]
+    string _targetTag;
 
     /// <summary>敵PlayerのTag</summary>
     [SerializeField]
@@ -59,7 +66,7 @@ public class BeyBladeBase : MonoBehaviour
     Rigidbody _rb;
     /// <summary>ターゲットとなるオブジェクト</summary>
     GameObject _target;
-    /// <summary>切り替え用</summary>
+    /// <summary>体勢が変わった時だけ切り替える</summary>
     bool _switch;
     /// <summary>回転値Xを固定するためのメンバー変数</summary>
     RigidbodyConstraints freezeRotX = RigidbodyConstraints.FreezeRotationX;
@@ -117,5 +124,10 @@ public class BeyBladeBase : MonoBehaviour
             _rb.constraints = freezeRotX | freezeRotZ;
             _switch = false;
         }
+    }
+
+    public int DamageHP(int damage)
+    {
+        return _hp -= damage;
     }
 }
