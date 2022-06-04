@@ -7,11 +7,6 @@ using UnityEngine;
 /// </summary>
 public class AttackType : BeyBladeBase
 {
-    protected override void Awake()
-    {
-        base.Awake();
-    }
-
     protected override void Update()
     {
         //if (RotSpeed > 0)
@@ -23,15 +18,5 @@ public class AttackType : BeyBladeBase
         //}
         //else Rb.velocity = Vector3.zero;
         base.Update();
-    }
-
-    protected override void OnCollisionEnter(Collision collision)
-    {
-        base.OnCollisionEnter(collision);
-    }
-
-    protected override void OnCollisionExit(Collision collision)
-    {
-        base.OnCollisionExit(collision);
     }
 }
