@@ -8,6 +8,12 @@ using UnityEngine;
 /// </summary>
 public class GameManager : SingletonMonoBehaviour<GameManager>
 {
+    /// <summary>Player1が持っている勝利ポイントのプロパティ</summary>
+    public int FirstPlayerPoint => _firstPlayerPoint;
+
+    /// <summaryPlayer2が持っている勝利ポイントのプロパティ</summary>
+    public int SecondPlayerPoint => _secondPlayerPoint;
+
     /// <summary>何ポイント先取で勝ちか</summary>
     [SerializeField]
     [Header("何ポイント先取で勝ちか")]
@@ -65,7 +71,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     /// <summary>Player2のTag</summary>
     [SerializeField]
     [Header("Player2のTag")]
-    string _secondPlayerTag = "Player2";
+    string _secondPlayerTag = "SecondPlayer";
 
     /// <summary>PlaneのCollider</summary>
     [SerializeField]
@@ -83,6 +89,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     /// <summary>Player2が持っている勝利ポイント</summary>
     int _secondPlayerPoint;
 
+
     protected override void Awake()
     {
         base.Awake();
@@ -94,6 +101,49 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     void Update()
     {
 
+    }
+
+
+    /// <summary>敵プレイヤーに勝利ポイントを追加</summary>
+    /// <param name="playerTag">敵プレイヤーのTag </param>
+    public void OverFinish(string enemyPlayerTag)
+    {
+        if(enemyPlayerTag == _firstPlayerTag)
+        {
+            _firstPlayerPoint += _overFinishPoints;
+        }
+        else if(enemyPlayerTag == _secondPlayerTag)
+        {
+            _secondPlayerPoint += _overFinishPoints;
+        }
+    }
+
+    /// <summary>敵プレイヤーに勝利ポイントを追加</summary>
+    /// <param name="enemyPlayrTag">敵プレイヤーのTag</param>
+    public void SpinFinish(string enemyPlayrTag)
+    {
+        if(enemyPlayrTag == _firstPlayerTag)
+        {
+            _firstPlayerPoint += _spinFinishPoints;
+        }
+        else if(enemyPlayrTag == _secondPlayerTag)
+        {
+            _secondPlayerPoint += _spinFinishPoints;
+        }
+    }
+
+    /// <summary>敵プレイヤーに勝利ポイントを追加(未定)</summary>
+    /// <param name="enemyPlayerTag"></param>
+    public void BurstFInish(string enemyPlayerTag)
+    {
+        if(enemyPlayerTag == _firstPlayerTag)
+        {
+            _firstPlayerPoint += _burstFinishPoints;
+        }
+        else if(enemyPlayerTag == _secondPlayerTag)
+        {
+            _secondPlayerPoint += _burstFinishPoints;
+        }
     }
 
 }

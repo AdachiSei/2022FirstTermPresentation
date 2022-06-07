@@ -43,8 +43,28 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     [Header("Œ‹‰Ê‰æ–Ê‚Ìƒpƒlƒ‹")]
     Text _resultPanel;
 
-    private void Start()
+    void Start()
     {
         
+    }
+
+    void Update()
+    {
+        
+    }
+
+    public void OverFinishText()
+    {
+
+    }   
+    
+    public void SpinFinishText()
+    {
+
+    }
+
+    public void BurstFinishText()
+    {
+
     }
 }

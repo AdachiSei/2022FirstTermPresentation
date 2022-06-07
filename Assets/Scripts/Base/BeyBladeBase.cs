@@ -91,7 +91,8 @@ public class BeyBladeBase : MonoBehaviour
         else
         {
             _rotSpeed = 0;
-            //GameManagerに伝える処理を書く
+            //GameManagerに伝えるスピンフィニッシュ
+            GameManager.Instance.SpinFinish(_enemyPlayerTag);
         }
         //回転スピードがほぼなくなったら体勢を崩す
         if (_rotSpeed <= 10f) _rb.constraints = RigidbodyConstraints.None;
@@ -109,7 +110,8 @@ public class BeyBladeBase : MonoBehaviour
         //場外の床に当たったら
         else if(collision.gameObject.tag == _floorTag)
         {
-            //GameManagerに伝える処理を書く
+            //GameManagerに伝えるオーバーフィニッシュの処理
+            GameManager.Instance.OverFinish(_enemyPlayerTag);
         }
     }
 
