@@ -126,7 +126,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     /// <summary>敵プレイヤーに勝利ポイントを追加(未定)</summary>
     /// <param name="enemyPlayerTag"></param>
-    public void BurstFInish(string enemyPlayerTag)
+    public void BurstFinish(string enemyPlayerTag)
     {
         switch (enemyPlayerTag)
         {

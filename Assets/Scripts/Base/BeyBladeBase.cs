@@ -49,10 +49,6 @@ public class BeyBladeBase : MonoBehaviour
     [Header("ターゲットとなるスタジアムの中心のオブジェクトのTag")]
     string _targetTag;
 
-    /// <summary>敵PlayerのTag</summary>
-    [SerializeField]
-    [Header("敵PlayerのTag")]
-    string _enemyPlayerTag = "Player";
 
     /// <summary>WallのTag</summary>
     [SerializeField]
@@ -73,9 +69,26 @@ public class BeyBladeBase : MonoBehaviour
     RigidbodyConstraints freezeRotX = RigidbodyConstraints.FreezeRotationX;
     /// <summary>回転値Zを固定するためのメンバー変数</summary>
     RigidbodyConstraints freezeRotZ = RigidbodyConstraints.FreezeRotationZ;
+    /// <summary>敵PlayerのTag</summary>
+    string _enemyPlayerTag;
+    /// <summary>Player1のTag</summary>
+    const string FIRST_PLAYER_TAG = "Player";
+    /// <summary>Player2のTag</summary>
+    const string SECOND_PLAYER_TAG = "SecondPlayer";
+
 
     protected virtual void Awake()
     {
+        switch (gameObject.tag)
+        {
+            case FIRST_PLAYER_TAG:
+                _enemyPlayerTag = SECOND_PLAYER_TAG;
+                break;
+            case SECOND_PLAYER_TAG:
+                _enemyPlayerTag = FIRST_PLAYER_TAG;
+                break;
+        }          
+
         _rb = GetComponent<Rigidbody>();
         _target = GameObject.FindWithTag(_targetTag);
         //回転値のXとZを固定

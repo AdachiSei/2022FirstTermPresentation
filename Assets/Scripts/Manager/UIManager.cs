@@ -8,19 +8,19 @@ using UnityEngine.UI;
 /// </summary>
 public class UIManager : SingletonMonoBehaviour<UIManager>
 {
-    /// <summary>Player1の勝利ポイントテキスト</summary>
+    /// <summary>Player1の勝利ポイントのテキスト</summary>
     [SerializeField]
-    [Header("Player1の勝利ポイント")]
+    [Header("Player1の勝利ポイントのテキスト")]
     Text _firstPlayerPointText;
 
     /// <summary>Player2の勝利ポイントのテキスト</summary>
     [SerializeField]
-    [Header("Player2の勝利ポイント")]
+    [Header("Player2の勝利ポイントのテキスト")]
     Text _secondPlayerPointText;
 
     /// <summary>現在のラウンド数のテキスト</summary>
     [SerializeField]
-    [Header("ラウンド数のText")]
+    [Header("ラウンド数のテキスト")]
     Text _roundText;
 
     /// <summary>相手を場外に追い出した時に表示するテキスト</summary>
@@ -53,6 +53,11 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
         
     }
 
+    /// <summary>Player1が持っている勝利ポイント</summary>
+    /// <param name="FirstPlayerPoint">現在の勝利ポイント</param>
+    public void FirstPlayerText(int FirstPlayerPoint) => _firstPlayerPointText.text = FirstPlayerPoint.ToString();
+
+    public void SecondPlayerText(int SecondPlayerPoint) => _secondPlayerPointText.text = SecondPlayerPoint.ToString();
     /// <summary>オーバーフィニッシュが決まったときに表示</summary>
     public void OverFinishText() => _overFinishText.gameObject.SetActive(true);     
     /// <summary>スピンフィニッシュが決まったときに表示</summary>
