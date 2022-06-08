@@ -100,12 +100,15 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         {
             case FIRST_PLAYER_TAG://Player1なら
                 _firstPlayerPoint += _overFinishPoints;
+                UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
                 break;
             case SECOND_PLAYER_TAG://Player2なら
                 _secondPlayerPoint += _overFinishPoints;
+                UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
                 break;
         }
         UIManager.Instance.OverFinishText();
+        Debug.Log("over");
     }
 
     /// <summary>敵プレイヤーに勝利ポイントを追加</summary>
@@ -116,12 +119,15 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         {
             case FIRST_PLAYER_TAG://Player1なら
                 _firstPlayerPoint += _spinFinishPoints;
+                UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
                 break;
             case SECOND_PLAYER_TAG://Player2なら
                 _secondPlayerPoint += _spinFinishPoints;
+                UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
                 break;
         }
         UIManager.Instance.SpinFinishText();
+        Debug.Log("spin");
     }
 
     /// <summary>敵プレイヤーに勝利ポイントを追加(未定)</summary>
@@ -132,9 +138,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         {
             case FIRST_PLAYER_TAG://Player1なら
                 _firstPlayerPoint += _burstFinishPoints;
+                UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
                 break;
             case SECOND_PLAYER_TAG://Player2なら
                 _secondPlayerPoint += _burstFinishPoints;
+                UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
                 break;
         }
         UIManager.Instance.BurstFinishText();

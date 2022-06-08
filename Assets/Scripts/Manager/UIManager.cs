@@ -55,9 +55,11 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
 
     /// <summary>Player1が持っている勝利ポイント</summary>
     /// <param name="FirstPlayerPoint">現在の勝利ポイント</param>
-    public void FirstPlayerText(int FirstPlayerPoint) => _firstPlayerPointText.text = FirstPlayerPoint.ToString();
+    public void FirstPlayerText(int FirstPlayerPoint) => _firstPlayerPointText.text = "Player1" + FirstPlayerPoint.ToString() + "P";
 
-    public void SecondPlayerText(int SecondPlayerPoint) => _secondPlayerPointText.text = SecondPlayerPoint.ToString();
+    /// <summary>Player2が持っている勝利ポイント</summary>
+    /// <param name="SecondPlayerPoint">現在の勝利ポイント</param>
+    public void SecondPlayerText(int SecondPlayerPoint) => _secondPlayerPointText.text = "Player2" + SecondPlayerPoint.ToString() + "P";
     /// <summary>オーバーフィニッシュが決まったときに表示</summary>
     public void OverFinishText() => _overFinishText.gameObject.SetActive(true);     
     /// <summary>スピンフィニッシュが決まったときに表示</summary>
