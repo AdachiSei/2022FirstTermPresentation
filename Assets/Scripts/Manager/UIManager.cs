@@ -23,15 +23,15 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     [Header("ラウンド数のText")]
     Text _roundText;
 
-    /// <summary>相手より長く回って勝利した時に表示するテキスト</summary>
-    [SerializeField]
-    [Header("相手より長く回って勝利した時に表示するテキスト")]
-    Text _spinFinishText;
-
     /// <summary>相手を場外に追い出した時に表示するテキスト</summary>
     [SerializeField]
     [Header("相手を場外に追い出した時に表示するテキスト")]
     Text _overFinishText;
+
+    /// <summary>相手より長く回って勝利した時に表示するテキスト</summary>
+    [SerializeField]
+    [Header("相手より長く回って勝利した時に表示するテキスト")]
+    Text _spinFinishText;
 
     /// <summary>相手を破壊した時に表示するテキスト(実装未定)</summary>
     [SerializeField]
@@ -53,18 +53,10 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
         
     }
 
-    public void OverFinishText()
-    {
-
-    }   
-    
-    public void SpinFinishText()
-    {
-
-    }
-
-    public void BurstFinishText()
-    {
-
-    }
+    /// <summary>オーバーフィニッシュが決まったときに表示</summary>
+    public void OverFinishText() => _overFinishText.gameObject.SetActive(true);     
+    /// <summary>スピンフィニッシュが決まったときに表示</summary>
+    public void SpinFinishText() => _spinFinishText.gameObject.SetActive(true);
+    /// <summary>バーストフィニッシュが決まった時に表示（未定）</summary>
+    public void BurstFinishText() => _burstFinishText.gameObject.SetActive(true);
 }

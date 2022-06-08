@@ -63,23 +63,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     [Header("相手を破壊する度に貰える金額のボーナス(実装未定)")]
     float _burstFinishBonus;
 
-    /// <summary>Player1のTag</summary>
-    [SerializeField]
-    [Header("Player1のTag")]
-    string _firstPlayerTag = "Player";
-
-    /// <summary>Player2のTag</summary>
-    [SerializeField]
-    [Header("Player2のTag")]
-    string _secondPlayerTag = "SecondPlayer";
-
-    /// <summary>PlaneのCollider</summary>
-    [SerializeField]
-    [Header("PlaneのCollider")]
-    Collider _collider;
-
     Rigidbody _rb;
-
     /// <summary>Player1のゲームオブジェクト</summary>
     GameObject _firstPlayer;
     /// <summary>Player2のゲームオブジェクト</summary>
@@ -89,12 +73,16 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     /// <summary>Player2が持っている勝利ポイント</summary>
     int _secondPlayerPoint;
 
+    /// <summary>Player1のTag</summary>
+    const string FIRST_PLAYER_TAG = "Player";
+    /// <summary>Player2のTag</summary>
+    const string SECOND_PLAYER_TAG = "SecondPlayer";
 
     protected override void Awake()
     {
         base.Awake();
-        _firstPlayer = GameObject.FindWithTag(_firstPlayerTag);
-        _secondPlayer = GameObject.FindWithTag(_secondPlayerTag);
+        _firstPlayer = GameObject.FindWithTag(FIRST_PLAYER_TAG);
+        _secondPlayer = GameObject.FindWithTag(SECOND_PLAYER_TAG);
     }
 
 
@@ -108,42 +96,53 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     /// <param name="playerTag">敵プレイヤーのTag </param>
     public void OverFinish(string enemyPlayerTag)
     {
-        if(enemyPlayerTag == _firstPlayerTag)
+        switch (enemyPlayerTag)
         {
-            _firstPlayerPoint += _overFinishPoints;
+            case FIRST_PLAYER_TAG://Player1なら
+                _firstPlayerPoint += _overFinishPoints;
+                break;
+            case SECOND_PLAYER_TAG://Player2なら
+                _secondPlayerPoint += _overFinishPoints;
+                break;
         }
-        else if(enemyPlayerTag == _secondPlayerTag)
-        {
-            _secondPlayerPoint += _overFinishPoints;
-        }
+        UIManager.Instance.OverFinishText();
     }
 
     /// <summary>敵プレイヤーに勝利ポイントを追加</summary>
     /// <param name="enemyPlayrTag">敵プレイヤーのTag</param>
     public void SpinFinish(string enemyPlayrTag)
     {
-        if(enemyPlayrTag == _firstPlayerTag)
+        switch(enemyPlayrTag)
         {
-            _firstPlayerPoint += _spinFinishPoints;
+            case FIRST_PLAYER_TAG://Player1なら
+                _firstPlayerPoint += _spinFinishPoints;
+                break;
+            case SECOND_PLAYER_TAG://Player2なら
+                _secondPlayerPoint += _spinFinishPoints;
+                break;
         }
-        else if(enemyPlayrTag == _secondPlayerTag)
-        {
-            _secondPlayerPoint += _spinFinishPoints;
-        }
+        UIManager.Instance.SpinFinishText();
     }
 
     /// <summary>敵プレイヤーに勝利ポイントを追加(未定)</summary>
     /// <param name="enemyPlayerTag"></param>
     public void BurstFInish(string enemyPlayerTag)
     {
-        if(enemyPlayerTag == _firstPlayerTag)
+        switch (enemyPlayerTag)
         {
-            _firstPlayerPoint += _burstFinishPoints;
+            case FIRST_PLAYER_TAG://Player1なら
+                _firstPlayerPoint += _burstFinishPoints;
+                break;
+            case SECOND_PLAYER_TAG://Player2なら
+                _secondPlayerPoint += _burstFinishPoints;
+                break;
         }
-        else if(enemyPlayerTag == _secondPlayerTag)
-        {
-            _secondPlayerPoint += _burstFinishPoints;
-        }
+        UIManager.Instance.BurstFinishText();
     }
 
+    /// <summary>ゲーム終了</summary>
+    void EndGame()
+    {
+
+    }
 }

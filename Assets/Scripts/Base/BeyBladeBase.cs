@@ -2,11 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 /// <summary>
-/// ベイブレードのベースクラス
+/// ベイブレードの基底クラス
+/// 回転させる処理、勝利判定はここで行う
 /// </summary>
 public class BeyBladeBase : MonoBehaviour
 {
     public Rigidbody Rb => _rb;
+    /// <summary>移動スピードのプロパティ</summary>
+    public float Speed => _speed;
+    /// <summary>回転スピードのプロパティ</summary>
+    public float RotSpeed　=> _rotSpeed;
     /// <summary>ターゲットとなるスタジアムの中心を示す空のオブジェクトのプロパティ</summary>
     public GameObject Target => _target;
     /// <summary>敵PlayerのTagのプロパティ</summary>
@@ -17,12 +22,8 @@ public class BeyBladeBase : MonoBehaviour
     public string FloorTag => _floorTag;
     /// <summary>体力のプロパティ</summary>
     public int HP => _hp;
-    /// <summary>移動スピードのプロパティ</summary>
-    public float Speed { get => _speed; set => _speed = value; }
-    /// <summary>回転スピードのプロパティ</summary>
-    public float RotSpeed { get => _rotSpeed; set => _rotSpeed = value; }
     /// <summary>切り替え用のプロパティ</summary>
-    public bool Switch { get => _switch; set => _switch = value; }
+    public bool Switch => _switch;
 
     /// <summary>体力</summary>
     [SerializeField]
@@ -91,7 +92,7 @@ public class BeyBladeBase : MonoBehaviour
         else
         {
             _rotSpeed = 0;
-            //GameManagerに伝えるスピンフィニッシュ
+            //GameManagerに伝えるスピンフィニッシュの処理
             GameManager.Instance.SpinFinish(_enemyPlayerTag);
         }
         //回転スピードがほぼなくなったら体勢を崩す
@@ -133,3 +134,4 @@ public class BeyBladeBase : MonoBehaviour
         return _hp -= damage;
     }
 }
+
