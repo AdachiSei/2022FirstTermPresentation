@@ -65,6 +65,8 @@ public class BeyBladeBase : MonoBehaviour
     GameObject _target;
     /// <summary>体勢が変わった時だけ切り替える</summary>
     bool _switch;
+    /// <summary>1回だけ実行</summary>
+    bool _one;
     /// <summary>回転値Xを固定するためのメンバー変数</summary>
     RigidbodyConstraints freezeRotX = RigidbodyConstraints.FreezeRotationX;
     /// <summary>回転値Zを固定するためのメンバー変数</summary>
@@ -93,6 +95,8 @@ public class BeyBladeBase : MonoBehaviour
         _target = GameObject.FindWithTag(_targetTag);
         //回転値のXとZを固定
         _rb.constraints = freezeRotX | freezeRotZ;
+
+        _one = true;
     }
 
     protected virtual void Update()
@@ -104,9 +108,13 @@ public class BeyBladeBase : MonoBehaviour
         //回転スピードが0になったら止まる
         else
         {
+            if(_one)
+            {
             _rotSpeed = 0;
             //GameManagerに伝えるスピンフィニッシュの処理
-            GameManager.Instance.SpinFinish(_enemyPlayerTag);
+            StartCoroutine(GameManager.Instance.BattleFinish(_enemyPlayerTag,Finish.Spin));
+                _one = false;
+            }
         }
         //回転スピードがほぼなくなったら体勢を崩す
         if (_rotSpeed <= 10f) _rb.constraints = RigidbodyConstraints.None;
@@ -118,14 +126,14 @@ public class BeyBladeBase : MonoBehaviour
         if (collision.gameObject.tag == _enemyPlayerTag)
         {
             //自分の体制が崩れる
-            _rb.constraints = freezeRotX & freezeRotZ;
+            //_rb.constraints = freezeRotX & freezeRotZ;
             _switch = true;
         }
         //場外の床に当たったら
         else if(collision.gameObject.tag == _floorTag)
         {
             //GameManagerに伝えるオーバーフィニッシュの処理
-            GameManager.Instance.OverFinish(_enemyPlayerTag);
+            StartCoroutine(GameManager.Instance.BattleFinish(_enemyPlayerTag,Finish.Over));
         }
     }
 

@@ -38,6 +38,11 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     [Header("相手を破壊した時に表示するテキスト)")]
     Text _burstFinishText;
 
+    /// <summary>引き分けになった時に表示するテキスト</summary>
+    [SerializeField]
+    [Header("引き分けになった時に表示するテキスト")]
+    Text _drawFinishText;
+
     /// <summary>結果画面のパネル</summary>
     [SerializeField]
     [Header("結果画面のパネル")]
@@ -66,4 +71,6 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     public void SpinFinishText() => _spinFinishText.gameObject.SetActive(true);
     /// <summary>バーストフィニッシュが決まった時に表示（未定）</summary>
     public void BurstFinishText() => _burstFinishText.gameObject.SetActive(true);
+    /// <summary>ドローになった時に表示（未定）</summary>
+    public void DrawFinishText() => _drawFinishText.gameObject.SetActive(true);
 }

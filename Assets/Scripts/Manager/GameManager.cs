@@ -72,13 +72,19 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     int _firstPlayerPoint;
     /// <summary>Player2が持っている勝利ポイント</summary>
     int _secondPlayerPoint;
-    /// <summary>切り替え</summary>
+    /// <summary>判定回数</summary>
+    int _judgCount;
+    /// <summary>一回だけ反応するように切り替え</summary>
     bool _switch;
 
     /// <summary>Player1のTag</summary>
     const string FIRST_PLAYER_TAG = "Player";
     /// <summary>Player2のTag</summary>
     const string SECOND_PLAYER_TAG = "SecondPlayer";
+    /// <summary>引き分けになる判定回数</summary>
+    const int DRAW_COUNT = 2;
+    /// <summary>一瞬待つ</summary>
+    const float JUDG_TIME = 0.1f;
 
     protected override void Awake()
     {
@@ -88,73 +94,76 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         _switch = true;
     }
 
-
-    void Update()
-    {
-
-    }
-
-
-    /// <summary>敵プレイヤーに勝利ポイントを追加</summary>
-    /// <param name="playerTag">敵プレイヤーのTag </param>
-    public void OverFinish(string enemyPlayerTag)
-    {
-        if(_switch)
-        {
-            switch (enemyPlayerTag)
-            {
-                case FIRST_PLAYER_TAG://Player1なら
-                    _firstPlayerPoint += _overFinishPoints;
-                    UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
-                    break;
-                case SECOND_PLAYER_TAG://Player2なら
-                    _secondPlayerPoint += _overFinishPoints;
-                    UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
-                    break;
-            }
-            UIManager.Instance.OverFinishText();
-        }
-    }
-
     /// <summary>敵プレイヤーに勝利ポイントを追加</summary>
     /// <param name="enemyPlayrTag">敵プレイヤーのTag</param>
-    public void SpinFinish(string enemyPlayrTag)
+    public IEnumerator BattleFinish(string enemyPlayrTag, Finish finish)
     {
         if (_switch)
         {
-            switch (enemyPlayrTag)
-            {
-                case FIRST_PLAYER_TAG://Player1なら
-                    _firstPlayerPoint += _spinFinishPoints;
-                    UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
-                    break;
-                case SECOND_PLAYER_TAG://Player2なら
-                    _secondPlayerPoint += _spinFinishPoints;
-                    UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
-                    break;
-            }
-            UIManager.Instance.SpinFinishText();
-        }
-    }
+            _judgCount++;//判定回数
 
-    /// <summary>敵プレイヤーに勝利ポイントを追加(未定)</summary>
-    /// <param name="enemyPlayerTag"></param>
-    public void BurstFinish(string enemyPlayerTag)
-    {
-        if (_switch)
-        {
-            switch (enemyPlayerTag)
+            if (enemyPlayrTag == FIRST_PLAYER_TAG)//Player1のTagだったら
             {
-                case FIRST_PLAYER_TAG://Player1なら
-                    _firstPlayerPoint += _burstFinishPoints;
-                    UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
-                    break;
-                case SECOND_PLAYER_TAG://Player2なら
-                    _secondPlayerPoint += _burstFinishPoints;
-                    UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
-                    break;
+                yield return new WaitForSeconds(JUDG_TIME);//一瞬待つ
+                if (_judgCount >= DRAW_COUNT)//判定回数が2回以上なら
+                {
+                    UIManager.Instance.DrawFinishText();//引き分け
+                }
+                else
+                {
+                    switch (finish)
+                    {
+                        case Finish.Over://オーバーなら
+                            _firstPlayerPoint += _overFinishPoints;
+                            UIManager.Instance.OverFinishText();
+                            UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
+                            break;
+                        case Finish.Spin://スピンなら
+                            _firstPlayerPoint += _spinFinishPoints;
+                            UIManager.Instance.SpinFinishText();
+                            UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
+                            break;
+                        case Finish.Burst://バーストなら
+                            _firstPlayerPoint += _burstFinishPoints;
+                            UIManager.Instance.BurstFinishText();
+                            UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
+                            break;
+                    }
+                }
             }
-            UIManager.Instance.BurstFinishText();
+
+            //Player2のTagだったら
+            else
+            {
+                yield return new WaitForSeconds(JUDG_TIME);
+                switch (_judgCount)
+                {
+                    case DRAW_COUNT://判定回数が2回なら
+                        UIManager.Instance.DrawFinishText();//引き分け
+                        break;
+                    default://勝利ポイントを渡してテキストで表示
+                        switch (finish)
+                        {
+                            case Finish.Over://オーバーなら
+                                _secondPlayerPoint += _overFinishPoints;
+                                UIManager.Instance.OverFinishText();
+                                UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
+                                break;
+                            case Finish.Spin://スピンなら
+                                _secondPlayerPoint += _spinFinishPoints;
+                                UIManager.Instance.SpinFinishText();
+                                UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
+                                break;
+                            case Finish.Burst://バーストなら
+                                _secondPlayerPoint += _burstFinishPoints;
+                                UIManager.Instance.BurstFinishText();
+                                UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
+                                break;
+                        }
+                        break;
+                }
+            }
+            _switch = false;//２回目は勝敗を判定しないようにする
         }
     }
 
@@ -164,3 +173,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     }
 }
+
+public enum Finish
+{ 
+    Over,
+    Spin,
+    Burst
+}
+
