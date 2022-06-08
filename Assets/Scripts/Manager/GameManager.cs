@@ -72,6 +72,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     int _firstPlayerPoint;
     /// <summary>Player2が持っている勝利ポイント</summary>
     int _secondPlayerPoint;
+    /// <summary>切り替え</summary>
+    bool _switch;
 
     /// <summary>Player1のTag</summary>
     const string FIRST_PLAYER_TAG = "Player";
@@ -83,6 +85,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         base.Awake();
         _firstPlayer = GameObject.FindWithTag(FIRST_PLAYER_TAG);
         _secondPlayer = GameObject.FindWithTag(SECOND_PLAYER_TAG);
+        _switch = true;
     }
 
 
@@ -96,56 +99,63 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     /// <param name="playerTag">敵プレイヤーのTag </param>
     public void OverFinish(string enemyPlayerTag)
     {
-        switch (enemyPlayerTag)
+        if(_switch)
         {
-            case FIRST_PLAYER_TAG://Player1なら
-                _firstPlayerPoint += _overFinishPoints;
-                UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
-                break;
-            case SECOND_PLAYER_TAG://Player2なら
-                _secondPlayerPoint += _overFinishPoints;
-                UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
-                break;
+            switch (enemyPlayerTag)
+            {
+                case FIRST_PLAYER_TAG://Player1なら
+                    _firstPlayerPoint += _overFinishPoints;
+                    UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
+                    break;
+                case SECOND_PLAYER_TAG://Player2なら
+                    _secondPlayerPoint += _overFinishPoints;
+                    UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
+                    break;
+            }
+            UIManager.Instance.OverFinishText();
         }
-        UIManager.Instance.OverFinishText();
-        Debug.Log("over");
     }
 
     /// <summary>敵プレイヤーに勝利ポイントを追加</summary>
     /// <param name="enemyPlayrTag">敵プレイヤーのTag</param>
     public void SpinFinish(string enemyPlayrTag)
     {
-        switch(enemyPlayrTag)
+        if (_switch)
         {
-            case FIRST_PLAYER_TAG://Player1なら
-                _firstPlayerPoint += _spinFinishPoints;
-                UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
-                break;
-            case SECOND_PLAYER_TAG://Player2なら
-                _secondPlayerPoint += _spinFinishPoints;
-                UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
-                break;
+            switch (enemyPlayrTag)
+            {
+                case FIRST_PLAYER_TAG://Player1なら
+                    _firstPlayerPoint += _spinFinishPoints;
+                    UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
+                    break;
+                case SECOND_PLAYER_TAG://Player2なら
+                    _secondPlayerPoint += _spinFinishPoints;
+                    UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
+                    break;
+            }
+            UIManager.Instance.SpinFinishText();
         }
-        UIManager.Instance.SpinFinishText();
-        Debug.Log("spin");
     }
 
     /// <summary>敵プレイヤーに勝利ポイントを追加(未定)</summary>
     /// <param name="enemyPlayerTag"></param>
     public void BurstFinish(string enemyPlayerTag)
     {
-        switch (enemyPlayerTag)
+        if (_switch)
         {
-            case FIRST_PLAYER_TAG://Player1なら
-                _firstPlayerPoint += _burstFinishPoints;
-                UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
-                break;
-            case SECOND_PLAYER_TAG://Player2なら
-                _secondPlayerPoint += _burstFinishPoints;
-                UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
-                break;
+            switch (enemyPlayerTag)
+            {
+                case FIRST_PLAYER_TAG://Player1なら
+                    _firstPlayerPoint += _burstFinishPoints;
+                    UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
+                    break;
+                case SECOND_PLAYER_TAG://Player2なら
+                    _secondPlayerPoint += _burstFinishPoints;
+                    UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
+                    break;
+            }
+            UIManager.Instance.BurstFinishText();
         }
-        UIManager.Instance.BurstFinishText();
     }
 
     /// <summary>ゲーム終了</summary>
