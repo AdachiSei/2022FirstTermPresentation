@@ -150,8 +150,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
             //Player2‚ÌTag‚¾‚Á‚½‚ç
             else
             {
-                yield return new WaitForSeconds(JUDG_TIME);
-                switch (_judgCount)
+                yield return new WaitForSeconds(JUDG_TIME);//ˆêu‘Ò‚Â
+                switch (_judgCount)//”»’è‰ñ”
                 {
                     case DRAW_COUNT://”»’è‰ñ”‚ª2‰ñ‚È‚ç
                         UIManager.Instance.DrawFinishText();//ˆø‚«•ª‚¯
@@ -183,6 +183,12 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
             }
             _switch = false;//‚Q‰ñ–Ú‚ÍŸ”s‚ğ”»’è‚µ‚È‚¢‚æ‚¤‚É‚·‚é
         }
+    }
+
+    /// <summary>‡“r’†‚Ì‹xŒeŠÔ</summary>
+    IEnumerator HalfTime()
+    {
+        yield return new WaitForSeconds(default);
     }
 
     /// <summary>ƒQ[ƒ€I—¹</summary>
