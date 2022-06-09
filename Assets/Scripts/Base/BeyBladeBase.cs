@@ -96,7 +96,9 @@ public class BeyBladeBase : MonoBehaviour
 
         _oneJudg = true;
         //スクリプトを無効にする
-        enabled = false;   
+        enabled = false;
+        //Y軸をフリーズさせる
+        _rb.constraints = RigidbodyConstraints.FreezePositionY;
     }
 
     protected virtual void Update()
