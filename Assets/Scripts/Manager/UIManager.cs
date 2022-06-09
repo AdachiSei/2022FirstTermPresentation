@@ -43,10 +43,14 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     [Header("引き分けになった時に表示するテキスト")]
     Text _drawFinishText;
 
+    [SerializeField]
+    [Header("勝敗が決まった時に表示するテキスト")]
+    Text _gameSetText;
+
     /// <summary>結果画面のパネル</summary>
     [SerializeField]
     [Header("結果画面のパネル")]
-    Text _resultPanel;
+    Image _resultPanel;
 
     void Start()
     {
@@ -73,4 +77,12 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     public void BurstFinishText() => _burstFinishText.gameObject.SetActive(true);
     /// <summary>ドローになった時に表示（未定）</summary>
     public void DrawFinishText() => _drawFinishText.gameObject.SetActive(true);
+
+    /// <summary>決着がついたときに表示する</summary>
+    /// <param name="playerName">プレイヤーの名前</param>
+    public void GameSet(string playerName)
+    {
+        _gameSetText.text = playerName + " Win";
+        _gameSetText.gameObject.SetActive(true);
+    }
 }

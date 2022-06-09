@@ -18,7 +18,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     [SerializeField]
     [Header("何ポイント先取で勝ちか")]
     [Range(1,100)]
-    int _points = 3;
+    int _winPoints = 3;
 
     /// <summary>相手より長く回って勝利した時に貰えるポイント</summary>
     [SerializeField]
@@ -46,7 +46,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     /// <summary>勝利後に貰える金額のボーナス</summary>
     [SerializeField]
     [Header("勝利時にもらえる金額のボーナス")]
-    float _victoryMoney;
+    float _winMoney;
 
     /// <summary>相手より長く回る度に貰える金額のボーナス</summary>
     [SerializeField]
@@ -86,9 +86,10 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     int _secondPlayerBurstCount;
     /// <summary>判定回数</summary>
     int _judgCount;
+    /// <summary>ラウンド数</summary>
+    int _roundCount = 1;
     /// <summary>一回だけ反応するように切り替え</summary>
-    bool _switch;
-
+    bool _isJudg;
     /// <summary>Player1のTag</summary>
     const string FIRST_PLAYER_TAG = "Player";
     /// <summary>Player2のTag</summary>
@@ -103,14 +104,17 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         base.Awake();
         _firstPlayer = GameObject.FindWithTag(FIRST_PLAYER_TAG);
         _secondPlayer = GameObject.FindWithTag(SECOND_PLAYER_TAG);
-        _switch = true;
+        _isJudg = true;
+        //スクリプトを有効にする
+        //_firstPlayer.GetComponent<BeyBladeBase>().enabled = true;
+        //_secondPlayer.GetComponent<BeyBladeBase>().enabled = true;
     }
 
     /// <summary>敵プレイヤーに勝利ポイントを追加</summary>
     /// <param name="enemyPlayrTag">敵プレイヤーのTag</param>
     public IEnumerator BattleFinish(string enemyPlayrTag, Finish finish)
     {
-        if (_switch)
+        if (_isJudg)
         {
             _judgCount++;//判定回数
 
@@ -181,14 +185,28 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                         break;
                 }
             }
-            _switch = false;//２回目は勝敗を判定しないようにする
+            _isJudg = false;//２回目は勝敗を判定しないようにする
+            StartCoroutine(HalfTime());
         }
     }
 
     /// <summary>試合途中の休憩時間</summary>
     IEnumerator HalfTime()
     {
-        yield return new WaitForSeconds(default);
+        yield return new WaitForSeconds(5f);//ちょっと待つ
+        if(_firstPlayerPoint >= _winPoints)
+        {
+            UIManager.Instance.GameSet("Player1");
+
+        }
+        else if(_secondPlayerPoint >= _winPoints)
+        {
+            UIManager.Instance.GameSet("Player2");
+        }
+        else
+        {
+            _roundCount++;//ラウンド数を増やす
+        }
     }
 
     /// <summary>ゲーム終了</summary>
