@@ -72,6 +72,18 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     int _firstPlayerPoint;
     /// <summary>Player2が持っている勝利ポイント</summary>
     int _secondPlayerPoint;
+    /// <summary>Player1のオーバー回数</summary>
+    int _firstPlayerOverCount;
+    /// <summary>Player1のスピン回数</summary>
+    int _firstPlayerSpinCount;
+    /// <summary>Player1のバースト回数</summary>
+    int _firstPlayerBurstCount;
+    /// <summary>Player2のオーバー回数</summary>
+    int _secondPlayerOverCount;
+    /// <summary>Player2のスピン回数</summary>
+    int _secondPlayerSpinCount;
+    /// <summary>Player2のバースト回数</summary>
+    int _secondPlayerBurstCount;
     /// <summary>判定回数</summary>
     int _judgCount;
     /// <summary>一回だけ反応するように切り替え</summary>
@@ -115,16 +127,19 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                     {
                         case Finish.Over://オーバーなら
                             _firstPlayerPoint += _overFinishPoints;
+                            _firstPlayerOverCount++;
                             UIManager.Instance.OverFinishText();
                             UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
                             break;
                         case Finish.Spin://スピンなら
                             _firstPlayerPoint += _spinFinishPoints;
+                            _firstPlayerSpinCount++;
                             UIManager.Instance.SpinFinishText();
                             UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
                             break;
                         case Finish.Burst://バーストなら
                             _firstPlayerPoint += _burstFinishPoints;
+                            _firstPlayerBurstCount++;
                             UIManager.Instance.BurstFinishText();
                             UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
                             break;
@@ -146,16 +161,19 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                         {
                             case Finish.Over://オーバーなら
                                 _secondPlayerPoint += _overFinishPoints;
+                                _secondPlayerOverCount++;
                                 UIManager.Instance.OverFinishText();
                                 UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
                                 break;
                             case Finish.Spin://スピンなら
                                 _secondPlayerPoint += _spinFinishPoints;
+                                _secondPlayerSpinCount++;
                                 UIManager.Instance.SpinFinishText();
                                 UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
                                 break;
                             case Finish.Burst://バーストなら
                                 _secondPlayerPoint += _burstFinishPoints;
+                                _secondPlayerBurstCount++;
                                 UIManager.Instance.BurstFinishText();
                                 UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
                                 break;
