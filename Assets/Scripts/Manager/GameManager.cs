@@ -133,7 +133,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                         case Finish.Over://オーバーなら
                             _firstPlayerPoint += _overFinishPoints;
                             _firstPlayerOverCount++;
-                            UIManager.Instance.OverFinishText();
+                            UIManager.Instance.FinishText(Finish.Over);
                             UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
                             break;
                         case Finish.Spin://スピンなら
@@ -221,6 +221,7 @@ public enum Finish
 { 
     Over,
     Spin,
-    Burst
+    Burst,
+    Draw
 }
 

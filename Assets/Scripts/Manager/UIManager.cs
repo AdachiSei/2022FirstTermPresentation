@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 /// <summary>
@@ -8,6 +9,11 @@ using UnityEngine.UI;
 /// </summary>
 public class UIManager : SingletonMonoBehaviour<UIManager>
 {
+    /// <summary>フィニッシュテキストの表示秒数</summary>
+    [SerializeField]
+    [Header("フィニッシュテキストの表示秒数(ミリ秒)")]
+    int _seconds;
+
     /// <summary>Player1の勝利ポイントのテキスト</summary>
     [SerializeField]
     [Header("Player1の勝利ポイントのテキスト")]
@@ -22,6 +28,11 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     [SerializeField]
     [Header("ラウンド数のテキスト")]
     Text _roundText;
+
+    /// <summary>シュート時に表示するテキスト</summary>
+    [SerializeField]
+    [Header("シュート時に表示するテキスト")]
+    Text _shootText;
 
     /// <summary>相手を場外に追い出した時に表示するテキスト</summary>
     [SerializeField]
@@ -69,14 +80,43 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     /// <summary>Player2が持っている勝利ポイント</summary>
     /// <param name="SecondPlayerPoint">現在の勝利ポイント</param>
     public void SecondPlayerText(int SecondPlayerPoint) => _secondPlayerPointText.text = "Player2 " + SecondPlayerPoint.ToString() + "P";
-    /// <summary>オーバーフィニッシュが決まったときに表示</summary>
-    public void OverFinishText() => _overFinishText.gameObject.SetActive(true);     
-    /// <summary>スピンフィニッシュが決まったときに表示</summary>
-    public void SpinFinishText() => _spinFinishText.gameObject.SetActive(true);
-    /// <summary>バーストフィニッシュが決まった時に表示（未定）</summary>
-    public void BurstFinishText() => _burstFinishText.gameObject.SetActive(true);
-    /// <summary>ドローになった時に表示（未定）</summary>
-    public void DrawFinishText() => _drawFinishText.gameObject.SetActive(true);
+
+    /// <summary>シュート時に表示するテキスト</summary>
+    /// <param name="text"></param>
+    public void ReadySetText(string text) => _shootText.text = text;
+
+    
+    /// <summary>どちらかがポイントを手に入れたときに数秒間表示するテキスト</summary>
+    /// <param name="finish">勝ち方</param>
+    public async void Finish(Finish finish)
+    {
+        switch (finish)
+        {
+            case global::Finish.Over:
+                _overFinishText.gameObject.SetActive(true);
+                await Task.Delay(50);
+                _overFinishText.gameObject.SetActive(false);
+                break;
+
+            case global::Finish.Spin:
+                _spinFinishText.gameObject.SetActive(true);
+                await Task.Delay(50);
+                _spinFinishText.gameObject.SetActive(false);
+                break;
+
+            case global::Finish.Burst:
+                _burstFinishText.gameObject.SetActive(true);
+                await Task.Delay(50);
+                _burstFinishText.gameObject.SetActive(false);
+                break;
+
+            case global::Finish.Draw:
+                _drawFinishText.gameObject.SetActive(true);
+                await Task.Delay(50);
+                _drawFinishText.gameObject.SetActive(false);
+                break;
+        }
+    }
 
     /// <summary>決着がついたときに表示する</summary>
     /// <param name="playerName">プレイヤーの名前</param>
@@ -85,4 +125,9 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
         _gameSetText.text = playerName + " Win";
         _gameSetText.gameObject.SetActive(true);
     }
+}
+public enum UIFinish
+{
+    Over,
+
 }

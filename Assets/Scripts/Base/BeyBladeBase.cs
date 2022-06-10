@@ -96,7 +96,7 @@ public class BeyBladeBase : MonoBehaviour
 
         _oneJudg = true;
         //スクリプトを無効にする
-        //enabled = false;
+        enabled = false;
     }
 
     protected virtual void Update()
