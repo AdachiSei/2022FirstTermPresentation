@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 /// <summary>
 /// ƒQ[ƒ€ƒ}ƒl[ƒWƒƒ[
@@ -97,7 +98,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     /// <summary>ˆø‚«•ª‚¯‚É‚È‚é”»’è‰ñ”</summary>
     const int DRAW_COUNT = 2;
     /// <summary>ˆêu‘Ò‚Â</summary>
-    const float JUDG_TIME = 0.1f;
+    const int JUDG_TIME = 1;
 
     protected override void Awake()
     {
@@ -112,15 +113,15 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     /// <summary>“GƒvƒŒƒCƒ„[‚ÉŸ—˜ƒ|ƒCƒ“ƒg‚ğ’Ç‰Á</summary>
     /// <param name="enemyPlayrTag">“GƒvƒŒƒCƒ„[‚ÌTag</param>
-    public IEnumerator BattleFinish(string enemyPlayrTag, Finish finish)
+    public async void BattleFinish(string enemyPlayrTag, Finish finish)
     {
         if (_isJudg)
         {
             _judgCount++;//”»’è‰ñ”
 
             if (enemyPlayrTag == FIRST_PLAYER_TAG)//Player1‚ÌTag‚¾‚Á‚½‚ç
-            {
-                yield return new WaitForSeconds(JUDG_TIME);//ˆêu‘Ò‚Â
+            {              
+                await Task.Delay(JUDG_TIME);//ˆêu‘Ò‚Â
                 if (_judgCount >= DRAW_COUNT)//”»’è‰ñ”‚ª2‰ñˆÈã‚È‚ç
                 {
                     UIManager.Instance.DrawFinishText();//ˆø‚«•ª‚¯
@@ -154,7 +155,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
             //Player2‚ÌTag‚¾‚Á‚½‚ç
             else
             {
-                yield return new WaitForSeconds(JUDG_TIME);//ˆêu‘Ò‚Â
+                await Task.Delay(JUDG_TIME);//ˆêu‘Ò‚Â
                 switch (_judgCount)//”»’è‰ñ”
                 {
                     case DRAW_COUNT://”»’è‰ñ”‚ª2‰ñ‚È‚ç
@@ -186,14 +187,14 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                 }
             }
             _isJudg = false;//‚Q‰ñ–Ú‚ÍŸ”s‚ğ”»’è‚µ‚È‚¢‚æ‚¤‚É‚·‚é
-            StartCoroutine(HalfTime());
+            HalfTime();
         }
     }
 
     /// <summary>‡“r’†‚Ì‹xŒeŠÔ</summary>
-    IEnumerator HalfTime()
+    public async void HalfTime()
     {
-        yield return new WaitForSeconds(5f);//‚¿‚å‚Á‚Æ‘Ò‚Â
+        await Task.Delay(50);//‚¿‚å‚Á‚Æ‘Ò‚Â
         if(_firstPlayerPoint >= _winPoints)
         {
             UIManager.Instance.GameSet("Player1");

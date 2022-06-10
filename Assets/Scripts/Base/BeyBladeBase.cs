@@ -96,9 +96,7 @@ public class BeyBladeBase : MonoBehaviour
 
         _oneJudg = true;
         //スクリプトを無効にする
-        enabled = false;
-        //Y軸をフリーズさせる
-        _rb.constraints = RigidbodyConstraints.FreezePositionY;
+        //enabled = false;
     }
 
     protected virtual void Update()
@@ -114,7 +112,7 @@ public class BeyBladeBase : MonoBehaviour
             {
             _rotSpeed = 0;
             //GameManagerに伝えるスピンフィニッシュの処理
-            StartCoroutine(GameManager.Instance.BattleFinish(_enemyPlayerTag,Finish.Spin));
+            GameManager.Instance.BattleFinish(_enemyPlayerTag,Finish.Spin);
                 _oneJudg = false;
             }
         }
@@ -136,7 +134,7 @@ public class BeyBladeBase : MonoBehaviour
         else if(collision.gameObject.tag == _floorTag && _oneJudg)
         {
             //GameManagerに伝えるオーバーフィニッシュの処理
-            StartCoroutine(GameManager.Instance.BattleFinish(_enemyPlayerTag,Finish.Over));
+            GameManager.Instance.BattleFinish(_enemyPlayerTag,Finish.Over);
             _oneJudg = false;
         }
             _rotSpeed -= _rotSpeedDown;
