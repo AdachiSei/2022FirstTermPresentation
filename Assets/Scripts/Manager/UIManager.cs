@@ -88,29 +88,29 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     
     /// <summary>どちらかがポイントを手に入れたときに数秒間表示するテキスト</summary>
     /// <param name="finish">勝ち方</param>
-    public async void Finish(Finish finish)
+    public async void FinishText(UIFinish finish)
     {
         switch (finish)
         {
-            case global::Finish.Over:
+            case UIFinish.Over:
                 _overFinishText.gameObject.SetActive(true);
                 await Task.Delay(50);
                 _overFinishText.gameObject.SetActive(false);
                 break;
 
-            case global::Finish.Spin:
+            case UIFinish.Spin:
                 _spinFinishText.gameObject.SetActive(true);
                 await Task.Delay(50);
                 _spinFinishText.gameObject.SetActive(false);
                 break;
 
-            case global::Finish.Burst:
+            case UIFinish.Burst:
                 _burstFinishText.gameObject.SetActive(true);
                 await Task.Delay(50);
                 _burstFinishText.gameObject.SetActive(false);
                 break;
 
-            case global::Finish.Draw:
+            case UIFinish.Draw:
                 _drawFinishText.gameObject.SetActive(true);
                 await Task.Delay(50);
                 _drawFinishText.gameObject.SetActive(false);
@@ -129,5 +129,7 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
 public enum UIFinish
 {
     Over,
-
+    Spin,
+    Burst,
+    Draw
 }

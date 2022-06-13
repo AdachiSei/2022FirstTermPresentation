@@ -124,7 +124,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                 await Task.Delay(JUDG_TIME);//一瞬待つ
                 if (_judgCount >= DRAW_COUNT)//判定回数が2回以上なら
                 {
-                    UIManager.Instance.DrawFinishText();//引き分け
+                    UIManager.Instance.FinishText(UIFinish.Draw);//引き分け
                 }
                 else
                 {
@@ -133,19 +133,19 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                         case Finish.Over://オーバーなら
                             _firstPlayerPoint += _overFinishPoints;
                             _firstPlayerOverCount++;
-                            UIManager.Instance.FinishText(Finish.Over);
+                            UIManager.Instance.FinishText(UIFinish.Over);
                             UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
                             break;
                         case Finish.Spin://スピンなら
                             _firstPlayerPoint += _spinFinishPoints;
                             _firstPlayerSpinCount++;
-                            UIManager.Instance.SpinFinishText();
+                            UIManager.Instance.FinishText(UIFinish.Spin);
                             UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
                             break;
                         case Finish.Burst://バーストなら
                             _firstPlayerPoint += _burstFinishPoints;
                             _firstPlayerBurstCount++;
-                            UIManager.Instance.BurstFinishText();
+                            UIManager.Instance.FinishText(UIFinish.Burst);
                             UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
                             break;
                     }
@@ -159,7 +159,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                 switch (_judgCount)//判定回数
                 {
                     case DRAW_COUNT://判定回数が2回なら
-                        UIManager.Instance.DrawFinishText();//引き分け
+                        UIManager.Instance.FinishText(UIFinish.Draw);//引き分け
                         break;
                     default://勝利ポイントを渡してテキストで表示
                         switch (finish)
@@ -167,19 +167,19 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                             case Finish.Over://オーバーなら
                                 _secondPlayerPoint += _overFinishPoints;
                                 _secondPlayerOverCount++;
-                                UIManager.Instance.OverFinishText();
+                                UIManager.Instance.FinishText(UIFinish.Over);
                                 UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
                                 break;
                             case Finish.Spin://スピンなら
                                 _secondPlayerPoint += _spinFinishPoints;
                                 _secondPlayerSpinCount++;
-                                UIManager.Instance.SpinFinishText();
+                                UIManager.Instance.FinishText(UIFinish.Spin);
                                 UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
                                 break;
                             case Finish.Burst://バーストなら
                                 _secondPlayerPoint += _burstFinishPoints;
                                 _secondPlayerBurstCount++;
-                                UIManager.Instance.BurstFinishText();
+                                UIManager.Instance.FinishText(UIFinish.Burst);
                                 UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
                                 break;
                         }

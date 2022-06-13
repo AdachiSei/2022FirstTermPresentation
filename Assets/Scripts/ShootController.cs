@@ -49,12 +49,11 @@ public class ShootController : MonoBehaviour
     {
         //マウスポインターを非表示
         Cursor.visible = false;
-
         Shoot();
     }
 
     void Shoot()
-    { 
+    {
         switch (_shootProsess)
         {
             case ShootProcess.Pos://位置を決める
@@ -62,10 +61,11 @@ public class ShootController : MonoBehaviour
                 var target = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
                 target.y = transform.position.y;
                 transform.position = target;
-                break;
+               break;
 
             case ShootProcess.Power://回転値を決める場面だったら
                 _shootPowerSlider.value += _changePower;//スライダーの値を動かす
+                Debug.Log(11);
                 //値が最大か最小になったら
                 if (_shootPowerSlider.value == 0 || _shootPowerSlider.value == 1)
                 {
