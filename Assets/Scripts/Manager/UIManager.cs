@@ -9,10 +9,12 @@ using UnityEngine.UI;
 /// </summary>
 public class UIManager : SingletonMonoBehaviour<UIManager>
 {
+    public Slider ShootPowerSlider => _shootPowerSlider;
+
     /// <summary>フィニッシュテキストの表示秒数</summary>
     [SerializeField]
     [Header("フィニッシュテキストの表示秒数(ミリ秒)")]
-    int _seconds;
+    int _seconds = 50;
 
     /// <summary>Player1の勝利ポイントのテキスト</summary>
     [SerializeField]
@@ -28,6 +30,15 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     [SerializeField]
     [Header("ラウンド数のテキスト")]
     Text _roundText;
+
+    /// <summary>シュートする場所を決めるときに表示するテキスト</summary>
+    [SerializeField]
+    [Header("シュートする場所を決めるときに表示するテキスト")]
+    Text _shootPosText;
+
+    [SerializeField]
+    [Header("パワーを決める時に表示するテキスト")]
+    Text _shootPowerText;
 
     /// <summary>シュート時に表示するテキスト</summary>
     [SerializeField]
@@ -58,6 +69,11 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     [Header("勝敗が決まった時に表示するテキスト")]
     Text _gameSetText;
 
+    /// <summary>シュートパワーを決めるスライダー</summary>
+    [SerializeField]
+    [Header("シュートパワーを決めるスライダー")]
+    Slider _shootPowerSlider;
+
     /// <summary>結果画面のパネル</summary>
     [SerializeField]
     [Header("結果画面のパネル")]
@@ -81,6 +97,8 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     /// <param name="SecondPlayerPoint">現在の勝利ポイント</param>
     public void SecondPlayerText(int SecondPlayerPoint) => _secondPlayerPointText.text = "Player2 " + SecondPlayerPoint.ToString() + "P";
 
+    public void ShootPower(float changePower) => ShootPowerSlider.value += changePower;
+
     /// <summary>シュート時に表示するテキスト</summary>
     /// <param name="text"></param>
     public void ReadySetText(string text) => _shootText.text = text;
@@ -94,25 +112,25 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
         {
             case UIFinish.Over:
                 _overFinishText.gameObject.SetActive(true);
-                await Task.Delay(50);
+                await Task.Delay(_seconds);
                 _overFinishText.gameObject.SetActive(false);
                 break;
 
             case UIFinish.Spin:
                 _spinFinishText.gameObject.SetActive(true);
-                await Task.Delay(50);
+                await Task.Delay(_seconds);
                 _spinFinishText.gameObject.SetActive(false);
                 break;
 
             case UIFinish.Burst:
                 _burstFinishText.gameObject.SetActive(true);
-                await Task.Delay(50);
+                await Task.Delay(_seconds);
                 _burstFinishText.gameObject.SetActive(false);
                 break;
 
             case UIFinish.Draw:
                 _drawFinishText.gameObject.SetActive(true);
-                await Task.Delay(50);
+                await Task.Delay(_seconds);
                 _drawFinishText.gameObject.SetActive(false);
                 break;
         }
