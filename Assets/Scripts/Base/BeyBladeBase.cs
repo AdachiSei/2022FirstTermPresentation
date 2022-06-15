@@ -96,7 +96,7 @@ public class BeyBladeBase : MonoBehaviour
 
         _oneJudg = true;
         //スクリプトを無効にする
-        enabled = false;
+        //enabled = false;
     }
 
     protected virtual void Update()
@@ -110,11 +110,12 @@ public class BeyBladeBase : MonoBehaviour
         {
             if(_oneJudg)
             {
-            _rotSpeed = 0;
+            
             //GameManagerに伝えるスピンフィニッシュの処理
             GameManager.Instance.BattleFinish(_enemyPlayerTag,Finish.Spin);
                 _oneJudg = false;
             }
+            _rotSpeed = 0;
         }
         //回転スピードがほぼなくなったら体勢を崩す
         if (_rotSpeed <= 10f) _rb.constraints = RigidbodyConstraints.None;

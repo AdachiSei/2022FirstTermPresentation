@@ -9,11 +9,9 @@ using UnityEngine;
 /// </summary>
 public class GameManager : SingletonMonoBehaviour<GameManager>
 {
-    /// <summary>Player1が持っている勝利ポイントのプロパティ</summary>
-    public int FirstPlayerPoint => _firstPlayerPoint;
+    public GameObject FirstPlayer => _firstPlayer;
 
-    /// <summaryPlayer2が持っている勝利ポイントのプロパティ</summary>
-    public int SecondPlayerPoint => _secondPlayerPoint;
+    public GameObject SecondPlayer => _secondPlayer;
 
     /// <summary>何ポイント先取で勝ちか</summary>
     [SerializeField]
@@ -64,31 +62,30 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     [Header("相手を破壊する度に貰える金額のボーナス(実装未定)")]
     float _burstFinishBonus;
 
-    Rigidbody _rb;
     /// <summary>Player1のゲームオブジェクト</summary>
     GameObject _firstPlayer;
     /// <summary>Player2のゲームオブジェクト</summary>
     GameObject _secondPlayer;
     /// <summary>Player1が持っている勝利ポイント</summary>
-    int _firstPlayerPoint;
+    static int _firstPlayerPoint;
     /// <summary>Player2が持っている勝利ポイント</summary>
-    int _secondPlayerPoint;
+    static int _secondPlayerPoint;
     /// <summary>Player1のオーバー回数</summary>
-    int _firstPlayerOverCount;
+    static int _firstPlayerOverCount;
     /// <summary>Player1のスピン回数</summary>
-    int _firstPlayerSpinCount;
+    static int _firstPlayerSpinCount;
     /// <summary>Player1のバースト回数</summary>
-    int _firstPlayerBurstCount;
+    static int _firstPlayerBurstCount;
     /// <summary>Player2のオーバー回数</summary>
-    int _secondPlayerOverCount;
+    static int _secondPlayerOverCount;
     /// <summary>Player2のスピン回数</summary>
-    int _secondPlayerSpinCount;
+    static int _secondPlayerSpinCount;
     /// <summary>Player2のバースト回数</summary>
-    int _secondPlayerBurstCount;
+    static int _secondPlayerBurstCount;
     /// <summary>判定回数</summary>
     int _judgCount;
     /// <summary>ラウンド数</summary>
-    int _roundCount = 1;
+    static int _roundCount = 1;
     /// <summary>一回だけ反応するように切り替え</summary>
     bool _isJudg;
     /// <summary>Player1のTag</summary>
@@ -98,7 +95,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     /// <summary>引き分けになる判定回数</summary>
     const int DRAW_COUNT = 2;
     /// <summary>一瞬待つ</summary>
-    const int JUDG_TIME = 1;
+    const int JUDG_TIME = 100;
 
     protected override void Awake()
     {
@@ -106,9 +103,9 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         _firstPlayer = GameObject.FindWithTag(FIRST_PLAYER_TAG);
         _secondPlayer = GameObject.FindWithTag(SECOND_PLAYER_TAG);
         _isJudg = true;
-        //スクリプトを有効にする
-        //_firstPlayer.GetComponent<BeyBladeBase>().enabled = true;
-        //_secondPlayer.GetComponent<BeyBladeBase>().enabled = true;
+        UIManager.Instance.RoundText(_roundCount);
+        UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
+        UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
     }
 
     /// <summary>敵プレイヤーに勝利ポイントを追加</summary>
@@ -186,15 +183,15 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                         break;
                 }
             }
-            _isJudg = false;//２回目は勝敗を判定しないようにする
-            HalfTime();
+            if(_isJudg)HalfTime();
+            _isJudg = false;//２回目は勝敗を判定しないようにする           
         }
     }
 
     /// <summary>試合途中の休憩時間</summary>
     public async void HalfTime()
     {
-        await Task.Delay(50);//ちょっと待つ
+        await Task.Delay(5000);//ちょっと待つ
         if(_firstPlayerPoint >= _winPoints)
         {
             UIManager.Instance.GameSet("Player1");
@@ -207,13 +204,15 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         else
         {
             _roundCount++;//ラウンド数を増やす
+            UIManager.Instance.RoundText(_roundCount);
+            EndGame();
         }
     }
 
     /// <summary>ゲーム終了</summary>
     void EndGame()
     {
-
+        SceneLoader.Instance.LoadBattleScene("BattleScene");
     }
 }
 

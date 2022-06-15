@@ -13,8 +13,12 @@ public class CameraManager : SingletonMonoBehaviour<CameraManager>
     Camera _highCamera;
 
     [SerializeField]
-    [Header("横にあるカメラ")]
-    Camera _sideCamera;
+    [Header("プレイヤー1の横にあるカメラ")]
+    Camera _firstSideCamera;
+
+    [SerializeField]
+    [Header("プレイヤー2の横にあるカメラ")]
+    Camera _secondSideCamera;
 
     /// <summary>カメラを変える</summary>
     /// <param name="_camera">表示したい画面のカメラ</param>
@@ -25,17 +29,20 @@ public class CameraManager : SingletonMonoBehaviour<CameraManager>
             case CameraType.Main:
                 _mainCamera.depth = 1;
                 _highCamera.depth = 0;
-                _sideCamera.depth = 0;
+                _firstSideCamera.depth = 0;
+                _secondSideCamera.depth = 0;
                 break;
             case CameraType.High:
                 _mainCamera.depth = 0;
                 _highCamera.depth = 1;
-                _sideCamera.depth = 0;
+                _firstSideCamera.depth = 0;
+                _secondSideCamera.depth = 0;
                 break;
             case CameraType.Side:
                 _mainCamera.depth = 0;
                 _highCamera.depth = 0;
-                _sideCamera.depth = 1;
+                _firstSideCamera.depth = 1;
+                _secondSideCamera.depth = 1;
                 break;
         }
     }

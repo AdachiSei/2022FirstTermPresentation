@@ -9,12 +9,12 @@ using UnityEngine.UI;
 /// </summary>
 public class UIManager : SingletonMonoBehaviour<UIManager>
 {
-    public Slider ShootPowerSlider => _shootPowerSlider;
+    public List<Slider> ShootPowerSlider => _shootPowerSlider;
 
     /// <summary>フィニッシュテキストの表示秒数</summary>
     [SerializeField]
     [Header("フィニッシュテキストの表示秒数(ミリ秒)")]
-    int _seconds = 50;
+    int _seconds = 300;
 
     /// <summary>Player1の勝利ポイントのテキスト</summary>
     [SerializeField]
@@ -72,38 +72,31 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     /// <summary>シュートパワーを決めるスライダー</summary>
     [SerializeField]
     [Header("シュートパワーを決めるスライダー")]
-    Slider _shootPowerSlider;
+    List<Slider> _shootPowerSlider = new List<Slider>();
 
     /// <summary>結果画面のパネル</summary>
     [SerializeField]
     [Header("結果画面のパネル")]
     Image _resultPanel;
 
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
-
     /// <summary>Player1が持っている勝利ポイント</summary>
-    /// <param name="FirstPlayerPoint">現在の勝利ポイント</param>
     public void FirstPlayerText(int FirstPlayerPoint) => _firstPlayerPointText.text = "Player1 " + FirstPlayerPoint.ToString() + "P";
 
     /// <summary>Player2が持っている勝利ポイント</summary>
-    /// <param name="SecondPlayerPoint">現在の勝利ポイント</param>
     public void SecondPlayerText(int SecondPlayerPoint) => _secondPlayerPointText.text = "Player2 " + SecondPlayerPoint.ToString() + "P";
 
-    public void ShootPower(float changePower) => ShootPowerSlider.value += changePower;
+    /// <summary>ラウンド数</summary>
+    public void RoundText(int RoundCount) => _roundText.text = "Round" + RoundCount.ToString();
+
+    /// <summary>表示するかどうかを変える</summary>
+    public void DisplayShootPowerSlider(bool setActive) => _shootPowerSlider.ForEach(x => { x.gameObject.SetActive(setActive); });
+
+    /// <summary>スライダーの値を変える</summary>
+    public void ShootPower(float changePower) => _shootPowerSlider[0].value += changePower;
 
     /// <summary>シュート時に表示するテキスト</summary>
-    /// <param name="text"></param>
     public void ReadySetText(string text) => _shootText.text = text;
 
-    
     /// <summary>どちらかがポイントを手に入れたときに数秒間表示するテキスト</summary>
     /// <param name="finish">勝ち方</param>
     public async void FinishText(UIFinish finish)
@@ -111,7 +104,7 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
         switch (finish)
         {
             case UIFinish.Over:
-                _overFinishText.gameObject.SetActive(true);
+                _overFinishText.gameObject.SetActive(true);              
                 await Task.Delay(_seconds);
                 _overFinishText.gameObject.SetActive(false);
                 break;

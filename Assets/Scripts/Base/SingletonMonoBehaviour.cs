@@ -34,7 +34,7 @@ public class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour
         // アタッチされている場合は破棄する。
         CheckInstance();
 
-        //DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject);
     }
 
     protected bool CheckInstance()
