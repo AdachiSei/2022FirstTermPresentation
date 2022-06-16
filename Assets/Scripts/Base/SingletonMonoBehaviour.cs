@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 /// <summary>
-/// ƒVƒ“ƒOƒ‹ƒgƒ“ƒpƒ^[ƒ“‚ÌŠî’êƒNƒ‰ƒX
+/// ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ãƒ‘ã‚¿ãƒ¼ãƒ³ã®åŸºåº•ã‚¯ãƒ©ã‚¹
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour
@@ -20,7 +20,7 @@ public class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour
 
                 if (instance == null)
                 {
-                    Debug.LogError(t + " ‚ğƒAƒ^ƒbƒ`‚µ‚Ä‚¢‚éGameObject‚Í‚ ‚è‚Ü‚¹‚ñ");
+                    Debug.LogError(t + " ã‚’ã‚¢ã‚¿ãƒƒãƒã—ã¦ã„ã‚‹GameObjectã¯ã‚ã‚Šã¾ã›ã‚“");
                 }
             }
 
@@ -30,12 +30,12 @@ public class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour
 
     virtual protected void Awake()
     {
-        // ‘¼‚ÌƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚ÉƒAƒ^ƒbƒ`‚³‚ê‚Ä‚¢‚é‚©’²‚×‚é
-        // ƒAƒ^ƒbƒ`‚³‚ê‚Ä‚¢‚éê‡‚Í”jŠü‚·‚éB
+        // ä»–ã®ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ã‚¢ã‚¿ãƒƒãƒã•ã‚Œã¦ã„ã‚‹ã‹èª¿ã¹ã‚‹
+        // ã‚¢ã‚¿ãƒƒãƒã•ã‚Œã¦ã„ã‚‹å ´åˆã¯ç ´æ£„ã™ã‚‹ã€‚
         CheckInstance();
 
-        transform.parent = null;
-        DontDestroyOnLoad(gameObject);
+        //transform.parent = null;
+        //DontDestroyOnLoad(gameObject);
     }
 
     protected bool CheckInstance()
