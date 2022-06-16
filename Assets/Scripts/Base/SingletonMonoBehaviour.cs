@@ -34,6 +34,7 @@ public class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour
         // アタッチされている場合は破棄する。
         CheckInstance();
 
+        transform.parent = null;
         DontDestroyOnLoad(gameObject);
     }
 

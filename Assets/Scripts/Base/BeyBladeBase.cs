@@ -11,7 +11,7 @@ public class BeyBladeBase : MonoBehaviour
     /// <summary>移動スピードのプロパティ</summary>
     public float Speed => _speed;
     /// <summary>回転スピードのプロパティ</summary>
-    public float RotSpeed　=> _rotSpeed;
+    public float RotSpeed => _rotSpeed;
     /// <summary>ターゲットとなるスタジアムの中心を示す空のオブジェクトのプロパティ</summary>
     public GameObject Target => _target;
     /// <summary>敵PlayerのTagのプロパティ</summary>
@@ -22,8 +22,6 @@ public class BeyBladeBase : MonoBehaviour
     public string FloorTag => _floorTag;
     /// <summary>体力のプロパティ</summary>
     public int HP => _hp;
-    /// <summary>切り替え用のプロパティ</summary>
-    public bool Switch => _switch;
 
     /// <summary>体力</summary>
     [SerializeField]
@@ -60,16 +58,12 @@ public class BeyBladeBase : MonoBehaviour
     string _floorTag = "Floor";
 
     Rigidbody _rb;
+    Collider _collider;
+    Material _material;
     /// <summary>ターゲットとなるオブジェクト</summary>
     GameObject _target;
-    /// <summary>体勢が変わった時だけ切り替える</summary>
-    bool _switch;
     /// <summary>1回だけ実行</summary>
     bool _oneJudg;
-    ///// <summary>回転値Xを固定するためのメンバー変数</summary>
-    //RigidbodyConstraints freezeRotX = RigidbodyConstraints.FreezeRotationX;
-    ///// <summary>回転値Zを固定するためのメンバー変数</summary>
-    //RigidbodyConstraints freezeRotZ = RigidbodyConstraints.FreezeRotationZ;
     /// <summary>敵PlayerのTag</summary>
     string _enemyPlayerTag;
     /// <summary>Player1のTag</summary>
@@ -78,28 +72,64 @@ public class BeyBladeBase : MonoBehaviour
     const string SECOND_PLAYER_TAG = "SecondPlayer";
 
     protected virtual void Awake()
-    {       
+    {
         _rb = GetComponent<Rigidbody>();
-        _target = GameObject.FindWithTag(_targetTag); 
-        //回転値のXとZを固定
-        //_rb.constraints = freezeRotX | freezeRotZ;
+        _collider = GetComponent<Collider>();
+        _material = GetComponent<Renderer>().material;
+        _collider.isTrigger = true;
+        
+        _target = GameObject.FindWithTag(_targetTag);
 
         switch (gameObject.tag)
         {
             case FIRST_PLAYER_TAG:
                 _enemyPlayerTag = SECOND_PLAYER_TAG;
+                _material.color = ColorManager.Instance.FirstPlayerColor;
                 break;
             case SECOND_PLAYER_TAG:
                 _enemyPlayerTag = FIRST_PLAYER_TAG;
+                _material.color = ColorManager.Instance.SecondPlayerColor;
                 break;
         }
 
         _oneJudg = true;
         //スクリプトを無効にする
-        //enabled = false;
+        enabled = false;
     }
 
     protected virtual void Update()
+    {
+        BeyRotates();
+    }
+
+    protected virtual void OnCollisionEnter(Collision collision)
+    {
+        //敵に当たったら
+        if (collision.gameObject.tag == _enemyPlayerTag)
+        {
+            _rotSpeed -= 1;
+        }
+        //場外の床に当たったら
+        else if (collision.gameObject.tag == _floorTag && _oneJudg)
+        {
+            //GameManagerに伝えるオーバーフィニッシュの処理
+            GameManager.Instance.BattleFinish(_enemyPlayerTag, Finish.Over);
+            _oneJudg = false;
+        }
+        _rotSpeed -= _rotSpeedDown;
+    }
+
+    protected virtual void OnCollisionExit(Collision collision)
+    {
+        //壁に当たったら
+        if (collision.gameObject.tag == WallTag)
+        {
+            //自分の体制を整える
+            transform.rotation = Quaternion.Euler(-180f, transform.rotation.y, 0f);
+        }
+    }
+
+    protected virtual void BeyRotates()
     {
         //回転
         _rb.angularVelocity = new Vector3(_rb.angularVelocity.x, _rotSpeed, _rb.angularVelocity.z);
@@ -108,50 +138,16 @@ public class BeyBladeBase : MonoBehaviour
         //回転スピードが0になったら止まる
         else
         {
-            if(_oneJudg)
+            if (_oneJudg)
             {
-            
-            //GameManagerに伝えるスピンフィニッシュの処理
-            GameManager.Instance.BattleFinish(_enemyPlayerTag,Finish.Spin);
+                //GameManagerに伝えるスピンフィニッシュの処理
+                GameManager.Instance.BattleFinish(_enemyPlayerTag, Finish.Spin);
                 _oneJudg = false;
             }
             _rotSpeed = 0;
         }
         //回転スピードがほぼなくなったら体勢を崩す
         if (_rotSpeed <= 10f) _rb.constraints = RigidbodyConstraints.None;
-    }
-
-    protected virtual void OnCollisionEnter(Collision collision)
-    {
-        //敵に当たったら
-        if (collision.gameObject.tag == _enemyPlayerTag)
-        {
-            //自分の体制が崩れる
-            //_rb.constraints = freezeRotX & freezeRotZ;
-            _switch = true;
-            _rotSpeed -= 1;
-        }
-        //場外の床に当たったら
-        else if(collision.gameObject.tag == _floorTag && _oneJudg)
-        {
-            //GameManagerに伝えるオーバーフィニッシュの処理
-            GameManager.Instance.BattleFinish(_enemyPlayerTag,Finish.Over);
-            _oneJudg = false;
-        }
-            _rotSpeed -= _rotSpeedDown;
-    }
-
-    protected virtual void OnCollisionExit(Collision collision)
-    {
-        //壁に当たったら
-        if(collision.gameObject.tag == WallTag && _switch)
-        {
-            ////回転値のXとZを固定
-            //_rb.constraints = freezeRotX | freezeRotZ;
-            //自分の体制を整える
-            transform.rotation = Quaternion.Euler(-180f, transform.rotation.y, 0f);
-            _switch = false;
-        }
     }
 }
 

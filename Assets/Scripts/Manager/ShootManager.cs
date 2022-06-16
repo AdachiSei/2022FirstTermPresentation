@@ -6,6 +6,12 @@ using UnityEngine.UI;
 
 public class ShootManager : SingletonMonoBehaviour<ShootManager>
 {
+    public float Height => _height;
+
+    [SerializeField]
+    [Header("ベイの高さ")]
+    float _height = 7f;
+
     [SerializeField]
     [Header("スライダーの値を変化させる大きさ")]
     [Range(0f, 1f)]
@@ -13,19 +19,24 @@ public class ShootManager : SingletonMonoBehaviour<ShootManager>
 
     Rigidbody _firstPlayerRb;
     Rigidbody _secondPlayerRb;
+    Collider _firstPlayerCollider;
+    Collider _secondPlayerCollider;
     string _inputButton;
     /// <summary>ベイブレードをシュートするための過程</summary>
-    ShootProcess _shootProsess = ShootProcess.Pos;
+    ShootProcess _shootProsess = ShootProcess.firstPos;
 
+    bool _isFirstShootPower;
+    bool _isSecondShootPower;
     bool _isShoot;
-
 
     void Start()
     {
         _firstPlayerRb = GameManager.Instance.FirstPlayer.GetComponent<Rigidbody>();
         _secondPlayerRb = GameManager.Instance.SecondPlayer.GetComponent<Rigidbody>();
-
-
+        _firstPlayerCollider = GameManager.Instance.FirstPlayer.GetComponent<Collider>();
+        _secondPlayerCollider = GameManager.Instance.SecondPlayer.GetComponent<Collider>();
+        _isFirstShootPower = true;
+        _isSecondShootPower = true;
         _isShoot = true;
         //Y軸と回転値をフリーズさせる
         _firstPlayerRb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
@@ -33,15 +44,6 @@ public class ShootManager : SingletonMonoBehaviour<ShootManager>
 
         //カメラを変更
         CameraManager.Instance.ChangeCamera(CameraType.High);
-
-        if (_firstPlayerRb.gameObject.tag == "Player")//プレイヤー1だったら
-        {
-            _inputButton = "Fire1";
-        }
-        else//プレイヤー2だったら
-        {
-            _inputButton = "Fire2";
-        }
     }
 
     void Update()
@@ -55,17 +57,41 @@ public class ShootManager : SingletonMonoBehaviour<ShootManager>
     {
         switch (_shootProsess)
         {
-            case ShootProcess.Pos://位置を決める
+            case ShootProcess.firstPos://最初のプレイヤーの位置を決める
                 //マウスに連動して動かす
-                var target = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
-                target.y = 7f;
-                GameManager.Instance.FirstPlayer.transform.position = target;
+                var fisrtTarget = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
+                fisrtTarget.y = _height;
+                GameManager.Instance.FirstPlayer.transform.position = fisrtTarget;
+                break;
+
+            case ShootProcess.secondPos://次のプレイヤーの位置を決める
+                var secondTarget = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
+                secondTarget.y = _height;
+                GameManager.Instance.SecondPlayer.transform.position = secondTarget;
                 break;
 
             case ShootProcess.Power://回転値を決める場面だったら
-                UIManager.Instance.ShootPower(_changePower);//スライダーの値を動かす
+                //スライダーの値を動かす
+                if (_isFirstShootPower) UIManager.Instance.ShootPower(_changePower, 0);
+                if (_isSecondShootPower) UIManager.Instance.ShootPower(_changePower, 1);
+
                 //値が最大か最小になったら
-                if (UIManager.Instance.ShootPowerSlider[0].value == 0 || UIManager.Instance.ShootPowerSlider[0].value == 1)
+                bool firstSlider;
+                bool secondSlider;
+
+                if (_isFirstShootPower)
+                {
+                    firstSlider = UIManager.Instance.ShootPowerSlider[0].value == 0 || UIManager.Instance.ShootPowerSlider[0].value == 1;
+                }
+                else firstSlider = false;
+
+                if (_isSecondShootPower)
+                {
+                    secondSlider = UIManager.Instance.ShootPowerSlider[1].value == 0 || UIManager.Instance.ShootPowerSlider[1].value == 1;
+                }
+                else secondSlider = false;
+
+                if (firstSlider || secondSlider)
                 {
                     _changePower = -_changePower;//逆方向に動かす
                 }
@@ -76,20 +102,48 @@ public class ShootManager : SingletonMonoBehaviour<ShootManager>
                 break;
         }
 
-        if (Input.GetButtonDown(_inputButton))
+        if (Input.GetButtonDown("Fire1"))//プレイヤー1
         {
             switch (_shootProsess)//今のシュートするための過程
             {
-                case ShootProcess.Pos://ベイブレードの位置を設定した
+                case ShootProcess.firstPos://ベイブレードの位置を設定した
+                    _shootProsess = ShootProcess.secondPos;
+                    break;
+
+                case ShootProcess.Power://シュートパワーを決めた
+                    _isFirstShootPower = false;
+
+                    if (!_isFirstShootPower && !_isSecondShootPower)
+                    {
+                        CameraManager.Instance.ChangeCamera(CameraType.High);//カメラを変更
+                        UIManager.Instance.DisplayShootPowerSlider(false);//スライダーを非表示
+                        _shootProsess = ShootProcess.Shoot;
+                    }
+                    
+                    break;
+            }
+        }
+
+        else if (Input.GetButtonDown("Fire2"))//プレイヤー2
+        {
+            switch (_shootProsess)
+            {
+                case ShootProcess.secondPos://ベイブレードの位置を設定した
                     CameraManager.Instance.ChangeCamera(CameraType.Side);//カメラを変更
                     UIManager.Instance.DisplayShootPowerSlider(true);//スライダーを表示
                     _shootProsess = ShootProcess.Power;
                     break;
 
                 case ShootProcess.Power://シュートパワーを決めた
-                    //CameraManager.Instance.ChangeCamera(CameraType.High);//カメラを変更
-                    UIManager.Instance.DisplayShootPowerSlider(false);//スライダーを非表示
-                    _shootProsess = ShootProcess.Shoot;
+                    _isSecondShootPower = false;
+
+                    if(!_isFirstShootPower && !_isSecondShootPower)
+                    {
+                        CameraManager.Instance.ChangeCamera(CameraType.High);//カメラを変更
+                        UIManager.Instance.DisplayShootPowerSlider(false);//スライダーを非表示
+                        _shootProsess = ShootProcess.Shoot;
+                    }
+                    
                     break;
             }
         }
@@ -98,32 +152,30 @@ public class ShootManager : SingletonMonoBehaviour<ShootManager>
     async void ReadySet()
     {
         _isShoot = false;
-        Debug.Log("R");
-        await Task.Delay(2000);
-        Debug.Log(3);
-        await Task.Delay(1000);
-        Debug.Log(2);
-        await Task.Delay(1000);
-        Debug.Log(1);
-        await Task.Delay(1000);
-        Debug.Log(0);
-        if(Input.GetAxis("Mouse X") > 0f|| Input.GetAxis("Mouse Y") > 0f)
+        UIManager.Instance.ShootCountText();
+        await Task.Delay(4000);
+
+        if (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f)
         {
             CameraManager.Instance.ChangeCamera(CameraType.Main);
             GameManager.Instance.FirstPlayer.GetComponent<BeyBladeBase>().enabled = true;
             GameManager.Instance.SecondPlayer.GetComponent<BeyBladeBase>().enabled = true;
             _firstPlayerRb.constraints = RigidbodyConstraints.FreezePositionY & RigidbodyConstraints.FreezeRotation;
             _secondPlayerRb.constraints = RigidbodyConstraints.FreezePositionY & RigidbodyConstraints.FreezeRotation;
+            _firstPlayerCollider.isTrigger = false;
+            _secondPlayerCollider.isTrigger = false;
         }
         else
         {
-
+            await Task.Delay(1000);
+            ReadySet();
         }
     }
 }
 public enum ShootProcess
 {
-    Pos,
+    firstPos,
+    secondPos,
     Power,
     Shoot
 }

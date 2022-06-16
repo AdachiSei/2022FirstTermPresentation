@@ -5,5 +5,5 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : SingletonMonoBehaviour<SceneLoader>
 {
-    public void LoadBattleScene(string SceneName) => SceneManager.LoadScene(SceneName);   
+    public void LoadScene(string SceneName) => SceneManager.LoadScene(SceneName);   
 }

@@ -40,7 +40,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     /// <summary>試合後に必ず貰える金額</summary>
     [SerializeField]
     [Header("試合後に必ず貰える金額")]
-    int _money;
+    float _money;
 
     /// <summary>勝利後に貰える金額のボーナス</summary>
     [SerializeField]
@@ -121,7 +121,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                 await Task.Delay(JUDG_TIME);//一瞬待つ
                 if (_judgCount >= DRAW_COUNT)//判定回数が2回以上なら
                 {
-                    UIManager.Instance.FinishText(UIFinish.Draw);//引き分け
+                    UIManager.Instance.FinishText(FinishUI.Draw);//引き分け
                 }
                 else
                 {
@@ -130,19 +130,19 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                         case Finish.Over://オーバーなら
                             _firstPlayerPoint += _overFinishPoints;
                             _firstPlayerOverCount++;
-                            UIManager.Instance.FinishText(UIFinish.Over);
+                            UIManager.Instance.FinishText(FinishUI.Over);
                             UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
                             break;
                         case Finish.Spin://スピンなら
                             _firstPlayerPoint += _spinFinishPoints;
                             _firstPlayerSpinCount++;
-                            UIManager.Instance.FinishText(UIFinish.Spin);
+                            UIManager.Instance.FinishText(FinishUI.Spin);
                             UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
                             break;
                         case Finish.Burst://バーストなら
                             _firstPlayerPoint += _burstFinishPoints;
                             _firstPlayerBurstCount++;
-                            UIManager.Instance.FinishText(UIFinish.Burst);
+                            UIManager.Instance.FinishText(FinishUI.Burst);
                             UIManager.Instance.FirstPlayerText(_firstPlayerPoint);
                             break;
                     }
@@ -156,7 +156,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                 switch (_judgCount)//判定回数
                 {
                     case DRAW_COUNT://判定回数が2回なら
-                        UIManager.Instance.FinishText(UIFinish.Draw);//引き分け
+                        UIManager.Instance.FinishText(FinishUI.Draw);//引き分け
                         break;
                     default://勝利ポイントを渡してテキストで表示
                         switch (finish)
@@ -164,19 +164,19 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                             case Finish.Over://オーバーなら
                                 _secondPlayerPoint += _overFinishPoints;
                                 _secondPlayerOverCount++;
-                                UIManager.Instance.FinishText(UIFinish.Over);
+                                UIManager.Instance.FinishText(FinishUI.Over);
                                 UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
                                 break;
                             case Finish.Spin://スピンなら
                                 _secondPlayerPoint += _spinFinishPoints;
                                 _secondPlayerSpinCount++;
-                                UIManager.Instance.FinishText(UIFinish.Spin);
+                                UIManager.Instance.FinishText(FinishUI.Spin);
                                 UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
                                 break;
                             case Finish.Burst://バーストなら
                                 _secondPlayerPoint += _burstFinishPoints;
                                 _secondPlayerBurstCount++;
-                                UIManager.Instance.FinishText(UIFinish.Burst);
+                                UIManager.Instance.FinishText(FinishUI.Burst);
                                 UIManager.Instance.SecondPlayerText(_secondPlayerPoint);
                                 break;
                         }
@@ -195,11 +195,14 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         if(_firstPlayerPoint >= _winPoints)
         {
             UIManager.Instance.GameSet("Player1");
-
+            MoneyManager.Instance.ChangeMoney(Money.FirstPlayer, (int)_winMoney + (int)_money);
+            MoneyManager.Instance.ChangeMoney(Money.SecondPlayer, (int)_money);
         }
         else if(_secondPlayerPoint >= _winPoints)
         {
             UIManager.Instance.GameSet("Player2");
+            MoneyManager.Instance.ChangeMoney(Money.FirstPlayer, (int)_money);
+            MoneyManager.Instance.ChangeMoney(Money.SecondPlayer, (int)_winMoney + (int)_money);
         }
         else
         {
@@ -212,7 +215,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     /// <summary>ゲーム終了</summary>
     void EndGame()
     {
-        SceneLoader.Instance.LoadBattleScene("BattleScene");
+        SceneLoader.Instance.LoadScene("BattleScene");
     }
 }
 
