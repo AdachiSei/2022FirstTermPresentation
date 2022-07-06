@@ -73,7 +73,11 @@ public class BeyBladeBase : MonoBehaviour
 
     protected virtual void Awake()
     {
-        _rb = GetComponent<Rigidbody>();
+        //_rb = GetComponent<Rigidbody>();
+        if (TryGetComponent(out _rb))
+        {
+            Debug.Log(_rb);
+        }
         _collider = GetComponent<Collider>();
         _material = GetComponent<Renderer>().material;
         _collider.isTrigger = true;
@@ -148,6 +152,10 @@ public class BeyBladeBase : MonoBehaviour
         }
         //回転スピードがほぼなくなったら体勢を崩す
         if (_rotSpeed <= 10f) _rb.constraints = RigidbodyConstraints.None;
+    }
+    public void ChangePower(float number)
+    {
+        _rotSpeed *= number;
     }
 }
 

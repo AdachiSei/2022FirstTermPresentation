@@ -49,7 +49,10 @@ public class ShootManager : SingletonMonoBehaviour<ShootManager>
     void Update()
     {
         //マウスポインターを非表示
-        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = true;
+        Debug.Log(Input.GetAxis("Mouse X"));
+        Debug.Log(Input.GetAxis("Mouse Y"));
         Shoot();
     }
 
@@ -59,15 +62,17 @@ public class ShootManager : SingletonMonoBehaviour<ShootManager>
         {
             case ShootProcess.firstPos://最初のプレイヤーの位置を決める
                 //マウスに連動して動かす
-                var fisrtTarget = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
-                fisrtTarget.y = _height;
-                GameManager.Instance.FirstPlayer.transform.position = fisrtTarget;
+                //var fisrtTarget = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
+                //fisrtTarget.y = _height;
+                //GameManager.Instance.FirstPlayer.transform.position = fisrtTarget;
+                _firstPlayerRb.velocity = new Vector3(Input.GetAxis("Mouse X"),_height, Input.GetAxis("Mouse Y")).normalized * 1000;
                 break;
 
             case ShootProcess.secondPos://次のプレイヤーの位置を決める
-                var secondTarget = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
-                secondTarget.y = _height;
-                GameManager.Instance.SecondPlayer.transform.position = secondTarget;
+                //var secondTarget = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
+                //secondTarget.y = _height;
+                //GameManager.Instance.SecondPlayer.transform.position = secondTarget;
+                _secondPlayerRb.velocity = new Vector3(Input.GetAxis("Mouse X"), _height, Input.GetAxis("Mouse Y")).normalized * 1000;
                 break;
 
             case ShootProcess.Power://回転値を決める場面だったら
@@ -107,6 +112,7 @@ public class ShootManager : SingletonMonoBehaviour<ShootManager>
             switch (_shootProsess)//今のシュートするための過程
             {
                 case ShootProcess.firstPos://ベイブレードの位置を設定した
+                    _firstPlayerRb.velocity = Vector3.zero;
                     _shootProsess = ShootProcess.secondPos;
                     break;
 
@@ -129,6 +135,7 @@ public class ShootManager : SingletonMonoBehaviour<ShootManager>
             switch (_shootProsess)
             {
                 case ShootProcess.secondPos://ベイブレードの位置を設定した
+                    _secondPlayerRb.velocity = Vector3.zero;
                     CameraManager.Instance.ChangeCamera(CameraType.Side);//カメラを変更
                     UIManager.Instance.DisplayShootPowerSlider(true);//スライダーを表示
                     _shootProsess = ShootProcess.Power;
@@ -164,6 +171,8 @@ public class ShootManager : SingletonMonoBehaviour<ShootManager>
             _secondPlayerRb.constraints = RigidbodyConstraints.FreezePositionY & RigidbodyConstraints.FreezeRotation;
             _firstPlayerCollider.isTrigger = false;
             _secondPlayerCollider.isTrigger = false;
+            GameManager.Instance.FirstPlayer.GetComponent<BeyBladeBase>().ChangePower(UIManager.Instance.ShootPowerSlider[0].value);
+            GameManager.Instance.SecondPlayer.GetComponent<BeyBladeBase>().ChangePower(UIManager.Instance.ShootPowerSlider[1].value);
         }
         else
         {

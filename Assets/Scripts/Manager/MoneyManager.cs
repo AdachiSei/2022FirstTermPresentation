@@ -10,6 +10,13 @@ public class MoneyManager : SingletonMonoBehaviour<MoneyManager>
     static int _firstPlayerMoney = 100;
     static int _secondPlayerMoney = 100;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        transform.parent = null;
+        DontDestroyOnLoad(gameObject);
+    }
+
     public void ChangeMoney(Money player,int money)
     {
         switch (player)

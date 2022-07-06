@@ -9,6 +9,12 @@ public class ColorManager : SingletonMonoBehaviour<ColorManager>
 
     static Vector4 _firstPlayerColor = new Vector4(255f,112f,0f,255f);
     static Vector4 _secondPlayerColor = new Vector4();
+    protected override void Awake()
+    {
+        base.Awake();
+        transform.parent = null;
+        DontDestroyOnLoad(gameObject);
+    }
 
     public void ChangeColor(Color color)
     {
