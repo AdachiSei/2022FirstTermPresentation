@@ -50,9 +50,8 @@ public class ShootManager : SingletonMonoBehaviour<ShootManager>
     void Update()
     {
         //マウスポインターを非表示
-        Cursor.lockState = CursorLockMode.Locked;
-        Debug.Log(Input.GetAxis("Mouse X"));
-        Debug.Log(Input.GetAxis("Mouse Y"));
+        if (_isShoot) Cursor.lockState = CursorLockMode.Locked;
+        else Cursor.lockState = CursorLockMode.None;
         Shoot();
     }
 
@@ -62,22 +61,10 @@ public class ShootManager : SingletonMonoBehaviour<ShootManager>
         {
             case ShootProcess.firstPos://最初のプレイヤーの位置を決める
                 //マウスに連動して動かす
-                //var fisrtTarget = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
-                //fisrtTarget.y = _height;
-                //GameManager.Instance.FirstPlayer.transform.position = fisrtTarget;
-
-                //_firstPlayerRb.velocity = new Vector3(Input.GetAxis("Mouse X"),default, Input.GetAxis("Mouse Y")).normalized * _speed;
-
                 GameManager.Instance.FirstPlayer.transform.position += new Vector3(Input.GetAxis("Mouse X"), 0, Input.GetAxis("Mouse Y"));
                 break;
 
             case ShootProcess.secondPos://次のプレイヤーの位置を決める
-                //var secondTarget = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
-                //secondTarget.y = _height;
-                //GameManager.Instance.SecondPlayer.transform.position = secondTarget;
-
-                //_secondPlayerRb.velocity = new Vector3(Input.GetAxis("Mouse X"), default, Input.GetAxis("Mouse Y")).normalized * _speed;
-
                 GameManager.Instance.SecondPlayer.transform.position += new Vector3(Input.GetAxis("Mouse X"), 0, Input.GetAxis("Mouse Y"));
                 break;
 

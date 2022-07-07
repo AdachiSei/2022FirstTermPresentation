@@ -196,12 +196,18 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
             UIManager.Instance.GameSet("Player1");
             MoneyManager.Instance.ChangeMoney(Money.FirstPlayer, (int)_winMoney + (int)_money);
             MoneyManager.Instance.ChangeMoney(Money.SecondPlayer, (int)_money);
+            _firstPlayerPoint = 0;
+            _secondPlayerPoint = 0;
+            _roundCount = 0;
         }
         else if(_secondPlayerPoint >= _winPoints)
         {
             UIManager.Instance.GameSet("Player2");
             MoneyManager.Instance.ChangeMoney(Money.FirstPlayer, (int)_money);
             MoneyManager.Instance.ChangeMoney(Money.SecondPlayer, (int)_winMoney + (int)_money);
+            _firstPlayerPoint = 0;
+            _secondPlayerPoint = 0;
+            _roundCount = 0;
         }
         else
         {
