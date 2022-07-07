@@ -84,6 +84,10 @@ public class BeyBladeBase : MonoBehaviour
         
         _target = GameObject.FindWithTag(_targetTag);
 
+        var transform = gameObject.transform.position;
+        transform.y = ShootManager.Instance.Height;
+        gameObject.transform.position = transform;
+
         switch (gameObject.tag)
         {
             case FIRST_PLAYER_TAG:
@@ -99,6 +103,7 @@ public class BeyBladeBase : MonoBehaviour
         _oneJudg = true;
         //スクリプトを無効にする
         enabled = false;
+
     }
 
     protected virtual void Update()

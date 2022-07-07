@@ -10,7 +10,6 @@ using UnityEngine;
 public class GameManager : SingletonMonoBehaviour<GameManager>
 {
     public GameObject FirstPlayer => _firstPlayer;
-
     public GameObject SecondPlayer => _secondPlayer;
 
     /// <summary>‰½ƒ|ƒCƒ“ƒgææ‚ÅŸ‚¿‚©</summary>
